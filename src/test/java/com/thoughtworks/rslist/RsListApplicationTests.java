@@ -47,13 +47,13 @@ class RsListApplicationTests {
 
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$",hasSize(3)));
-//                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-//                .andExpect(jsonPath("$[0].keyword", is("无分类")));
-//                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$[1].keyword", is("无分类")))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyword", is("无分类")));
+                .andExpect(jsonPath("$",hasSize(3)))
+                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
+                .andExpect(jsonPath("$[0].keyword", is("无分类")))
+                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
+                .andExpect(jsonPath("$[1].keyword", is("无分类")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyword", is("无分类")));
     }
 
     @Test
