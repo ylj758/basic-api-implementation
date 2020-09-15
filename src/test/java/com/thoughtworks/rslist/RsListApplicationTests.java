@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RsListApplicationTests {
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     void should_get_one_rs_event() throws Exception {
@@ -44,6 +44,7 @@ class RsListApplicationTests {
 
     @Test
     void should_get_rs_event_by_range() throws Exception {
+
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(3)));
@@ -71,6 +72,41 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(4)));
+    }
+
+//    @Test
+//    void should_update_one_rs_event() throws Exception {
+////        * 需求4： 修改某条事件时（通过参数传递的序号，修改列表中对应的事件数据），如果RequestBody只传了eventName没有传keyword那么仅仅只修改eventName
+////        如果只传了keyword没有传eventName，那么只修改keyword字段
+////        如果两个字段都传了，那么都进行修改
+//        mockMvc.perform(get("/rs/3"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.eventName", is("第三条事件")))
+//                .andExpect(jsonPath("$.keyword", is("无分类")));
+//
+//        mockMvc.perform(put("/rs/update?index=3&eventName=猪肉终于跌价了&keyword=民生"))
+//               .andExpect(status().isOk());
+//
+//        mockMvc.perform(get("/rs/3"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.eventName", is("猪肉终于跌价了")))
+//                .andExpect(jsonPath("$.keyword", is("民生")));
+//
+//    }
+
+    @Test
+    void should_delete_one_rs_event() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(3)));
+
+        MvcResult mvcResult = mockMvc.perform(delete("/rs/delete?id=3"))
+                .andExpect(status().isOk()).andReturn();
+
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(2)));
+
     }
 
 }

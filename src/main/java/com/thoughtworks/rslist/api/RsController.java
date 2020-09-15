@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.RsEvent;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class RsController {
   }
 
   @GetMapping("/rs/{index}")
-  public RsEvent getRsEvent(@PathVariable int index){
+  public RsEvent getRsEventByIndex(@PathVariable int index){
     return rsList.get(index-1);
   }
 
   @GetMapping("/rs/list")
-  public String getAllRsEvent(@RequestParam(required = false) Integer start,
+  public String getRsEventByRange(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end){
     if(start == null || end == null){
       return rsList.toString();
@@ -34,7 +35,25 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void getAllRsEvent(@RequestBody RsEvent rsEvent){
+  public void addRsEvent(@RequestBody RsEvent rsEvent){
     rsList.add(rsEvent);
+  }
+
+  @PutMapping("/rs/update")
+  public void updateRsEvent(@RequestBody Integer index,
+                            @RequestBody(required = false) String eventName,
+                            @RequestBody(required = false) String keyword){
+    RsEvent rsEvent = rsList.get(index-1);
+    if(eventName != null)
+      rsEvent.setEventName(eventName);
+    if(keyword != null)
+      rsEvent.setKeyword(keyword);
+    System.out.println(rsList.toString());
+  }
+
+  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
+  public void deleteRsEvent(@RequestParam int id){
+    rsList.remove(id-1);
+    System.out.println(rsList.toString());
   }
 }
