@@ -40,10 +40,10 @@ public class RsController {
   }
 
   @PutMapping("/rs/update")
-  public void updateRsEvent(@RequestBody Integer index,
-                            @RequestBody(required = false) String eventName,
-                            @RequestBody(required = false) String keyword){
-    RsEvent rsEvent = rsList.get(index-1);
+  public void updateRsEvent(@RequestParam Integer id,
+                            @RequestParam(required = false) String eventName,
+                            @RequestParam(required = false) String keyword){
+    RsEvent rsEvent = rsList.get(id-1);
     if(eventName != null)
       rsEvent.setEventName(eventName);
     if(keyword != null)
