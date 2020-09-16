@@ -65,7 +65,7 @@ public class RsController {
     return ResponseEntity.ok(rsList.get(index-1));
   }
 
-  @JsonView(RsEvent.RsEventDetail.class)
+//  @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/list")
   public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end) throws JsonProcessingException {
@@ -84,13 +84,13 @@ public class RsController {
       rsEvent.setEventName(eventName);
     if(keyword != null)
       rsEvent.setKeyword(keyword);
-    return ResponseEntity.created(null).build();
+    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
   }
 
   @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
   public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
     rsList.remove(id-1);
-    return ResponseEntity.created(null).build();
+    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
   }
 
 
