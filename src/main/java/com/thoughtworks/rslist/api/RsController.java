@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.exceptions.CommentError;
+import com.thoughtworks.rslist.exceptions.InvalidIndexException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +58,10 @@ public class RsController {
 
   @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/{index}")
-  public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index){
+  public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
+    if(index > rsList.size() || index < 1){
+      throw new InvalidIndexException();
+    }
     return ResponseEntity.ok(rsList.get(index-1));
   }
 
