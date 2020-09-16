@@ -67,7 +67,7 @@ public class RsController {
   }
 
   @PutMapping("/rs/update")
-  public void updateRsEvent(@RequestParam Integer id,
+  public ResponseEntity<Object> updateRsEvent(@RequestParam Integer id,
                             @RequestParam(required = false) String eventName,
                             @RequestParam(required = false) String keyword){
     RsEvent rsEvent = rsList.get(id-1);
@@ -75,13 +75,13 @@ public class RsController {
       rsEvent.setEventName(eventName);
     if(keyword != null)
       rsEvent.setKeyword(keyword);
-    System.out.println(rsList.toString());
+    return ResponseEntity.created(null).build();
   }
 
   @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
-  public void deleteRsEvent(@RequestParam int id){
+  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
     rsList.remove(id-1);
-    System.out.println(rsList.toString());
+    return ResponseEntity.created(null).build();
   }
 }
 
