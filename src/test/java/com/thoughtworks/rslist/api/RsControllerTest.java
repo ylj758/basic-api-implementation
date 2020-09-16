@@ -372,8 +372,8 @@ class RsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
 
-        MvcResult mvcResult = mockMvc.perform(delete("/rs/delete?id=3"))
-                .andExpect(status().isOk()).andReturn();
+        mockMvc.perform(delete("/rs/delete?id=3"))
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
