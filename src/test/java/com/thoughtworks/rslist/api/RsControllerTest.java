@@ -101,6 +101,32 @@ class RsControllerTest {
     }
 
     @Test
+    void should_add_one_rs_event_when_userName_is_exist() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        List<UserDto> userDtoList = userController.getUserDtos();
+        assertEquals(userDtoList.size(), 3);
+
+        UserDto userDto = new UserDto("ylj3", "femal", 25, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        userDtoList = userController.getUserDtos();
+        assertEquals(userDtoList.size(), 3);
+
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(4)))
+                .andExpect(jsonPath("$[3].userDto.name",is("ylj3")));
+    }
+
+    @Test
     void should_get_one_rs_event() throws Exception {
         mockMvc.perform(get("/rs/1"))
                 .andExpect(status().isOk())
