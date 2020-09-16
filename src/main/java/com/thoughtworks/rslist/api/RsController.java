@@ -60,7 +60,7 @@ public class RsController {
     return ResponseEntity.ok(rsList.get(index-1));
   }
 
-//  @JsonView(RsEvent.RsEventDetail.class)
+  @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/list")
   public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end) throws JsonProcessingException {
