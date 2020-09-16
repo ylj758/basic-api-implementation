@@ -1,29 +1,16 @@
-package com.thoughtworks.rslist.api;
+package com.thoughtworks.rslist.api.controller;
 
-//<<<<<<< HEAD
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-//=======
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
-import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.web.bind.annotation.*;
-//>>>>>>> data-binding
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class RsController {
-//<<<<<<< HEAD
-//  private List<String> rsList = Arrays.asList("第一条事件", "第二条事件", "第三条事件");
-//
-//  @GetMapping("rs/List")
-//  public String getAllRsEvent(){
-//    return rsList.toString();
-//=======
   private List<RsEvent> rsList = initRsList();
 
   private List<RsEvent> initRsList() {
@@ -69,7 +56,6 @@ public class RsController {
   public void deleteRsEvent(@RequestParam int id){
     rsList.remove(id-1);
     System.out.println(rsList.toString());
-//>>>>>>> data-binding
   }
 }
 
