@@ -106,5 +106,15 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void should_register_email_not_empty() throws Exception {
+        UserDto userDto = new UserDto("ylj", "female", 25, "", "12345678911");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
 
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
