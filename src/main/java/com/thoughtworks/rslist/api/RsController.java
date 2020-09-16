@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,7 @@ public class RsController {
   public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index){
     return ResponseEntity.ok(rsList.get(index-1));
   }
+
 
   @GetMapping("/rs/list")
   public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
