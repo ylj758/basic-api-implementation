@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RsEvent {
+    public interface RsEventDetail{}
+
     @NotEmpty
+    @JsonView(RsEventDetail.class)//或者在userDto字段上使用JsonIgnore
     private String eventName;
     @NotEmpty
+    @JsonView(RsEventDetail.class)
     private String keyword;
     @NotNull
     @Valid
-    @JsonIgnore
     private UserDto userDto;
 
     public RsEvent(String eventName, String keyword) {

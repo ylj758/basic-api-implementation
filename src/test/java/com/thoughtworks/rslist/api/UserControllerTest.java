@@ -1,16 +1,27 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -29,7 +40,7 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -152,5 +163,18 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void should_get_all_user() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/user/users"))
+                .andExpect(status().isOk()).andReturn();
+        MockHttpServletResponse response= mvcResult.getResponse();
+
+        List<UserDto> userDtos = new ArrayList<>();
+        userDtos.add(new UserDto("ylj1", "femal", 25, "123@qq.com", "12345678911"));
+        userDtos.add(new UserDto("ylj2", "femal", 25, "123@qq.com", "12345678911"));
+        userDtos.add(new UserDto("ylj3", "femal", 25, "123@qq.com", "12345678911"));
+        assertEquals(new ObjectMapper().writeValueAsString(userDtos), response.getContentAsString() );
+
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,12 +54,13 @@ public class RsController {
     return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
   }
 
+  @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/{index}")
   public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index){
     return ResponseEntity.ok(rsList.get(index-1));
   }
 
-
+  @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/list")
   public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end) throws JsonProcessingException {
