@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.exceptions.CommentError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,5 +88,7 @@ public class RsController {
     rsList.remove(id-1);
     return ResponseEntity.created(null).build();
   }
+
+
 }
 
