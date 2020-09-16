@@ -21,8 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -89,10 +88,10 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
-        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
+        mockMvc.perform(post("/rs/event")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated()).andReturn();
-        assertEquals(mvcResult.getResponse().getHeader("index"),"4");
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "4"));
 
         userDtoList = userController.getUserDtos();
         assertEquals(userDtoList.size(), 4);
@@ -116,10 +115,10 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
-        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
+        mockMvc.perform(post("/rs/event")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated()).andReturn();
-        assertEquals(mvcResult.getResponse().getHeader("index"),"4");
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "4"));
 
         userDtoList = userController.getUserDtos();
         assertEquals(userDtoList.size(), 3);
@@ -340,7 +339,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.keyword", is("无分类")));
 
         mockMvc.perform(put("/rs/update?id=3&eventName=猪肉终于跌价了&keyword=民生"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "3"));
 
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
@@ -357,7 +357,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.keyword", is("无分类")));
 
         mockMvc.perform(put("/rs/update?id=2&eventName=猪肉终于跌价了"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "3"));;
 
         mockMvc.perform(get("/rs/2"))
                 .andExpect(status().isOk())
@@ -374,7 +375,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.keyword", is("无分类")));
 
         mockMvc.perform(put("/rs/update?id=2&keyword=经济"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "3"));;;
 
         mockMvc.perform(get("/rs/2"))
                 .andExpect(status().isOk())
@@ -392,7 +394,8 @@ class RsControllerTest {
                 .andExpect(jsonPath("$", hasSize(3)));
 
         mockMvc.perform(delete("/rs/delete?id=3"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "2"));
 
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
