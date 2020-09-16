@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -280,35 +279,25 @@ class RsControllerTest {
     }
 
 
-
+    //隐藏userDto属性
     @Test
     void should_get_one_rs_event() throws Exception {
-        MvcResult mvcResult =
         mockMvc.perform(get("/rs/3"))
                 .andExpect(jsonPath("$.eventName", is("第三条事件")))
                 .andExpect(jsonPath("$.keyword", is("无分类")))
-                .andExpect(status().isOk()).andReturn();
-        MockHttpServletResponse response= mvcResult.getResponse();
-        response.setCharacterEncoding("UTF-8");
-        assertEquals(response.getContentAsString(), "{\"eventName\":\"第三条事件\",\"keyword\":\"无分类\"}");
+                .andExpect(status().isOk())//.andReturn()
+                .andExpect(jsonPath("$", not(hasKey("userDto"))));
     }
 
+    //隐藏userDto属性
     @Test
     void should_get_rs_event_by_range_when_start_and_end_is_not_null() throws Exception {
-        MvcResult mvcResult =
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyword", is("无分类"))).andReturn();
-        MockHttpServletResponse response= mvcResult.getResponse();
-        response.setCharacterEncoding("UTF-8");
-        List<RsEvent> rsList = new ArrayList<>();
-        rsList.add(new RsEvent("第一条事件","无分类"));
-        rsList.add(new RsEvent("第二条事件","无分类"));
-        rsList.add(new RsEvent("第三条事件","无分类"));
-        assertEquals(response.getContentAsString(),   new ObjectMapper().writeValueAsString(rsList));
-
+                .andExpect(jsonPath("$[2].keyword", is("无分类")))
+                .andExpect(jsonPath("$[2]", not(hasKey("userDto"))));
     }
 
     @Test

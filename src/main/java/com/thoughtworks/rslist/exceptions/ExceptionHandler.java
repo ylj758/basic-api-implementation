@@ -11,10 +11,9 @@ import org.slf4j.LoggerFactory;
 public class ExceptionHandler {
     public static Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
 
-    @org.springframework.web.bind.annotation.ExceptionHandler({IndexOutOfBoundsException.class, MethodArgumentNotValidException.class,
-            InvalidIndexException.class, InvalidUserException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({IndexOutOfBoundsException.class,
+            InvalidIndexException.class})
     public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception ex) {
-
         CommentError commentError = new CommentError();
         if (ex instanceof IndexOutOfBoundsException) {
             commentError.setError("invalid request param");
@@ -22,12 +21,7 @@ public class ExceptionHandler {
         if (ex instanceof InvalidIndexException) {
             commentError.setError("invalid index");
         }
-        if (ex instanceof MethodArgumentNotValidException) {
-            commentError.setError("invalid param");
-        }
-        if (ex instanceof InvalidUserException) {
-            commentError.setError("invalid user");
-        }
+
         logger.error("打印日志"+ex.getMessage());
         return ResponseEntity.status(400).body(commentError);
     }
