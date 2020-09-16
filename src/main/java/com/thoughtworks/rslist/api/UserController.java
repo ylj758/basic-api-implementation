@@ -1,6 +1,6 @@
-package com.thoughtworks.rslist.api.controller;
+package com.thoughtworks.rslist.api;
 
-import com.thoughtworks.rslist.api.dto.UserDto;
+import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

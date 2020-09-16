@@ -1,4 +1,4 @@
-package com.thoughtworks.rslist.api.controller;
+package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;

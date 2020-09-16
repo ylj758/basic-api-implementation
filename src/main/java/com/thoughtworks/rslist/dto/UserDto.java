@@ -1,4 +1,4 @@
-package com.thoughtworks.rslist.api.dto;
+package com.thoughtworks.rslist.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
