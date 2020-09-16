@@ -28,14 +28,12 @@ public class RsController {
   }
 
   @GetMapping("/rs/list")
-  public String getRsEventByRange(@RequestParam(required = false) Integer start,
+  public List<RsEvent> getRsEventByRange(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end) throws JsonProcessingException {
     if(start == null || end == null){
-      return rsList.toString();
+      return rsList;
     }
-    ObjectMapper objectMapper = new ObjectMapper();
-    String json = objectMapper.writeValueAsString(rsList.subList(start-1,end));
-    return json;
+    return rsList.subList(start-1,end);
   }
 
   @PostMapping("/rs/event")

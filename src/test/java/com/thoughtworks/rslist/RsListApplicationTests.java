@@ -43,15 +43,28 @@ class RsListApplicationTests {
     }
 
     @Test
-    void should_get_rs_event_by_range() throws Exception {
-
+    void should_get_rs_event_by_range_when_start_and_end_is_not_null() throws Exception {
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(3)))
-                .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                .andExpect(jsonPath("$[0].keyword", is("无分类")))
-                .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                .andExpect(jsonPath("$[1].keyword", is("无分类")))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyword", is("无分类")));
+    }
+
+    @Test
+    void should_get_rs_event_by_range_when_start_is_null() throws Exception {
+        mockMvc.perform(get("/rs/list?end=3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(3)))
+                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
+                .andExpect(jsonPath("$[2].keyword", is("无分类")));
+    }
+
+    @Test
+    void should_get_rs_event_by_range_when_end_is_null() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(3)))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keyword", is("无分类")));
     }
@@ -75,19 +88,53 @@ class RsListApplicationTests {
     }
 
     @Test
-    void should_update_one_rs_event() throws Exception {
+    void should_update_one_rs_event_by_eventName_and_keyword() throws Exception {
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第三条事件")))
                 .andExpect(jsonPath("$.keyword", is("无分类")));
 
         mockMvc.perform(put("/rs/update?id=3&eventName=猪肉终于跌价了&keyword=民生"))
-               .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("猪肉终于跌价了")))
                 .andExpect(jsonPath("$.keyword", is("民生")));
+
+    }
+
+    @Test
+    void should_update_one_rs_event_by_eventName() throws Exception {
+        mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("第二条事件")))
+                .andExpect(jsonPath("$.keyword", is("无分类")));
+
+        mockMvc.perform(put("/rs/update?id=2&eventName=猪肉终于跌价了"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("猪肉终于跌价了")))
+                .andExpect(jsonPath("$.keyword", is("无分类")));
+
+    }
+
+    @Test
+    void should_update_one_rs_event_by_keyword() throws Exception {
+        mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("第二条事件")))
+                .andExpect(jsonPath("$.keyword", is("无分类")));
+
+        mockMvc.perform(put("/rs/update?id=2&keyword=经济"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("第二条事件")))
+                .andExpect(jsonPath("$.keyword", is("经济")));
 
     }
 
