@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +36,7 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void addRsEvent(@Valid @RequestBody RsEvent rsEvent){
+  public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent){
     UserDto userDto = rsEvent.getUserDto();
     boolean isExistUserName = false;
     for (UserDto user : userDtos) {
@@ -48,11 +49,12 @@ public class RsController {
         userDtos.add(userDto);
 
     rsList.add(rsEvent);
+    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
   }
 
   @GetMapping("/rs/{index}")
-  public RsEvent getRsEventByIndex(@PathVariable int index){
-    return rsList.get(index-1);
+  public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index){
+    return ResponseEntity.ok(rsList.get(index-1));
   }
 
   @GetMapping("/rs/list")

@@ -87,9 +87,10 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
-        mockMvc.perform(post("/rs/event")
+        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated()).andReturn();
+        assertEquals(mvcResult.getResponse().getHeader("index"),"4");
 
         userDtoList = userController.getUserDtos();
         assertEquals(userDtoList.size(), 4);
@@ -113,9 +114,10 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
-        mockMvc.perform(post("/rs/event")
+        MvcResult mvcResult = mockMvc.perform(post("/rs/event")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated()).andReturn();
+        assertEquals(mvcResult.getResponse().getHeader("index"),"4");
 
         userDtoList = userController.getUserDtos();
         assertEquals(userDtoList.size(), 3);
@@ -128,16 +130,6 @@ class RsControllerTest {
 
     @Test
     void should_get_one_rs_event() throws Exception {
-        mockMvc.perform(get("/rs/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.eventName", is("第一条事件")))
-                .andExpect(jsonPath("$.keyword", is("无分类")));
-
-        mockMvc.perform(get("/rs/2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-                .andExpect(jsonPath("$.keyword", is("无分类")));
-
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第三条事件")))
