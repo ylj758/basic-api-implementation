@@ -18,6 +18,7 @@ public class RsEvent {
     @NotEmpty
     private String keyword;
     @NotNull
+    @Valid
     private UserDto userDto;
 
     public RsEvent(String eventName, String keyword) {

@@ -102,6 +102,157 @@ class RsControllerTest {
     }
 
     @Test
+    void should_add_one_rs_event_when_userName_empty() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("", "femal", 25, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_userName_length_not_more_than_8() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("yjfjsfkkhj", "femal", 25, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_gender_empty() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", null, 25, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_age_empty() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", null, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_age_not_more_than_18() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 3, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_age_more_than_100() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 101, "123@qq.com", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_email_empty() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 25, "", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_email_invalid() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 25, "123", "12345678911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_phone_empty() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 25, "123@qq.com", "");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_add_one_rs_event_when_phone_invalid() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
+
+        UserDto userDto = new UserDto("ylj", "femal", 25, "123@qq.com", "78911");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济", userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
     void should_add_one_rs_event_when_userName_is_exist() throws Exception {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
