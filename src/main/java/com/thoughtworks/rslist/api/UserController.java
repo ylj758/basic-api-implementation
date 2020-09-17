@@ -4,7 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exceptions.CommentError;
+import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,9 @@ import java.util.List;
 
 @RestController
 public class UserController {
+    @Autowired
+    UserService userService;
+
     private List<UserDto> userDtos = initUserDtos();
 
     private List<UserDto> initUserDtos() {
@@ -34,8 +41,8 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto){
-        userDtos.add(userDto);
-        return ResponseEntity.created(null).header("index",String.valueOf(userDtos.size())).build();
+        userService.register(userDto);
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping("/user/users")
