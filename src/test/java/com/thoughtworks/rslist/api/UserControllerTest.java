@@ -22,8 +22,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -34,6 +33,14 @@ class UserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
+
+    @Test
+    void should_delete_user_by_id() throws Exception {
+        UserDto userDto = new UserDto("ylj", "femal", 25, "123@qq.com", "12345678911");
+        userService.register(userDto);
+        mockMvc.perform(delete("/delete/1"))
+                .andExpect(status().isNoContent());
+    }
 
     @Test
     void should_get_user_by_id() throws Exception {

@@ -42,10 +42,10 @@ public class UserController {
         return userDtos;
     }
 
-    @PostMapping("/user/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto){
-        userService.register(userDto);
-        return ResponseEntity.created(null).build();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Object> register(@PathVariable int id){
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/user/{id}")
@@ -65,6 +65,13 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(userDto);
     }
+
+    @PostMapping("/user/register")
+    public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto){
+        userService.register(userDto);
+        return ResponseEntity.created(null).build();
+    }
+
 
 
     @GetMapping("/user/users")

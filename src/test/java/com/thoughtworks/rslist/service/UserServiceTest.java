@@ -22,12 +22,14 @@ class UserServiceTest {
     UserService userService;
 
     @Test
-    void sholud_register_and_find_all_success() {
+    void sholud_delete_by_id() {
         UserDto userDto = getAConcreteUser();
         userService.register(userDto);
         List<UserEntity> userEntityList = userService.findAll();
         assertEquals(1, userEntityList.size());
-        assertEquals("XiaoMing", userEntityList.get(0).getName());
+        userService.deleteById(1);
+        userEntityList = userService.findAll();
+        assertEquals(0, userEntityList.size());
     }
 
     @Test
@@ -37,6 +39,16 @@ class UserServiceTest {
         Optional<UserEntity> userEntity = userService.findById(1);
         assertEquals(userEntity.isPresent(),true);
     }
+
+    @Test
+    void sholud_register_and_find_all_success() {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        List<UserEntity> userEntityList = userService.findAll();
+        assertEquals(1, userEntityList.size());
+        assertEquals("XiaoMing", userEntityList.get(0).getName());
+    }
+
 
     public UserDto getAConcreteUser(){
         return UserDto.builder()
