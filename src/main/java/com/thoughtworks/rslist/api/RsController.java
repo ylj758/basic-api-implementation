@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RsController {
@@ -58,18 +59,31 @@ public class RsController {
 //  }
 
 
-    //  接口要求：当userId和rsEventId所关联的User匹配时，更新rsEvent信息
-//  当userId和rsEventId所关联的User不匹配时，返回400
-//          userId为必传字段
-//  当只传了eventName没传keyword时只更新eventName
-//          当只传了keyword没传eventName时只更新keyword
     @PutMapping("/patch/rs/{rsEventId}")
     public ResponseEntity<Object> updateRsEvent(@PathVariable Integer rsEventId,
                                                 @RequestParam Integer userId,
                                                 @RequestParam(required = false) String eventName,
                                                 @RequestParam(required = false) String keyword) {
-        if (rsEventId != userId)
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(rsEventId);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        if (rsEventEntity.getUserId() != userId)
             return ResponseEntity.badRequest().build();
+        String newEventName = eventName;
+        String newKeyword = keyword;
+        if (eventName == null || eventName.isEmpty()) {
+            newEventName = rsEventEntity.getEventName();
+        }
+        if (keyword  == null || keyword.isEmpty()) {
+            newKeyword = rsEventEntity.getKeyword();
+        }
+        RsEventEntity newRsEventEntity = RsEventEntity.builder()
+                .id(rsEventId)
+                .eventName(newEventName)
+                .keyword(newKeyword)
+                .userId(userId)
+                .build();
+        rsEventService.update(newRsEventEntity);
         return ResponseEntity.created(null).build();
     }
 //

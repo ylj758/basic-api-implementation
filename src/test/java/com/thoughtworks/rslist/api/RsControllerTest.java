@@ -7,6 +7,7 @@ import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +38,12 @@ class RsControllerTest {
     private UserService userService;
     @Autowired
     private RsEventService rsEventService;
+
+    @BeforeEach
+    void setUp(){
+        userService.deleteAll();
+        rsEventService.deleteAll();
+    }
 
     @Test
     void should_add_one_rs_event_when_user_not_exist() throws Exception {
@@ -100,86 +108,90 @@ class RsControllerTest {
 //                .andExpect(jsonPath("$[2].keyword", is("无分类")));
 //    }
 
-
-    //  接口要求：当userId和rsEventId所关联的User匹配时，更新rsEvent信息
-//  当userId和rsEventId所关联的User不匹配时，返回400
-//          userId为必传字段
-//  当只传了eventName没传keyword时只更新eventName
-//          当只传了keyword没传eventName时只更新keyword
     @Test
     void should_update_one_rs_event_when_user_id_and_rs_user_id_not_match() throws Exception {
-        mockMvc.perform(put("/patch/rs/2?userId=1&eventName=猪肉终于跌价了&keyword=民生"))
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        assertEquals(1, userService.findAll().size());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(put("/patch/rs/2?userId=3&eventName=猪肉终于跌价了&keyword=民生"))
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    void should_update_one_rs_event_when_id_match_eventName() throws Exception {
-//        UserDto userDto = getAConcreteUser();
-//        userService.register(userDto);
-//        assertEquals(1, userService.findAll().size());
-//        RsEvent rsEvent = RsEvent.builder()
-//                .eventName("猪肉涨价了")
-//                .keyword("经济")
-//                .userId(1)
-//                .build();
-//        rsEventService.save(rsEvent);
-//        assertEquals(1, rsEventService.findAll().size());
-//
-//        mockMvc.perform(put("/patch/rs/{rsEventId}?userId=1&eventName=猪肉终于跌价了&keyword=民生"))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//
-//
-//    @Test
-//    void should_update_one_rs_event_by_eventName_and_keyword() throws Exception {
-//
-//        mockMvc.perform(put("/patch/rs/{rsEventId}?userId=1&eventName=猪肉终于跌价了&keyword=民生"))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "3"));
-//
-//        mockMvc.perform(get("/rs/3"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.eventName", is("猪肉终于跌价了")))
-//                .andExpect(jsonPath("$.keyword", is("民生")));
-//
-//    }
-//
-//    @Test
-//    void should_update_one_rs_event_by_eventName() throws Exception {
-//        mockMvc.perform(get("/rs/2"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$.keyword", is("无分类")));
-//
-//        mockMvc.perform(put("/rs/update?id=2&eventName=猪肉终于跌价了"))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "3"));;
-//
-//        mockMvc.perform(get("/rs/2"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.eventName", is("猪肉终于跌价了")))
-//                .andExpect(jsonPath("$.keyword", is("无分类")));
-//
-//    }
-//
-//    @Test
-//    void should_update_one_rs_event_by_keyword() throws Exception {
-//        mockMvc.perform(get("/rs/2"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$.keyword", is("无分类")));
-//
-//        mockMvc.perform(put("/rs/update?id=2&keyword=经济"))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "3"));;;
-//
-//        mockMvc.perform(get("/rs/2"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.eventName", is("第二条事件")))
-//                .andExpect(jsonPath("$.keyword", is("经济")));
-//
-//    }
+    @Test
+    void should_update_one_rs_event_when_id_match_eventName_empty() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        assertEquals(1, userService.findAll().size());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(put("/patch/rs/2?userId=1&keyword=民生"))
+                .andExpect(status().isCreated());
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(2);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        assertEquals("猪肉涨价了", rsEventEntity.getEventName());
+        assertEquals("民生", rsEventEntity.getKeyword());
+    }
+
+    @Test
+    void should_update_one_rs_event_when_id_match_keyword_empty() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        assertEquals(1, userService.findAll().size());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(put("/patch/rs/2?userId=1&eventName=猪肉终于跌价了"))
+                .andExpect(status().isCreated());
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(2);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        assertEquals("猪肉终于跌价了", rsEventEntity.getEventName());
+        assertEquals("经济", rsEventEntity.getKeyword());
+    }
+
+    @Test
+    void should_update_one_rs_event_when_id_match_eventName_keyword_not_empty() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        assertEquals(1, userService.findAll().size());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(put("/patch/rs/2?userId=1&eventName=猪肉终于跌价了&keyword=民生"))
+                .andExpect(status().isCreated());
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(2);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        assertEquals("猪肉终于跌价了", rsEventEntity.getEventName());
+        assertEquals("民生", rsEventEntity.getKeyword());
+    }
+
+
 
 //    @Test
 //    void should_delete_one_rs_event() throws Exception {

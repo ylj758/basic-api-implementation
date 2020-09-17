@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RsEventService {
@@ -17,6 +18,10 @@ public class RsEventService {
        return rsEventRepository.findAll();
     }
 
+    public Optional<RsEventEntity> findById(int id){
+        return rsEventRepository.findById(id);
+    }
+
     public void save(RsEvent rsEvent){
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
@@ -24,5 +29,17 @@ public class RsEventService {
                 .userId(rsEvent.getUserId())
                 .build();
         rsEventRepository.save(rsEventEntity);
+    }
+
+    public void update(RsEventEntity rsEventEntity){
+        Optional<RsEventEntity> oldRsEventEntityOptional = rsEventRepository.findById(rsEventEntity.getId());
+        RsEventEntity oldRsEventEntity = oldRsEventEntityOptional.get();
+        oldRsEventEntity.setEventName(rsEventEntity.getEventName());
+        oldRsEventEntity.setKeyword(rsEventEntity.getKeyword());
+        rsEventRepository.save(rsEventEntity);
+    }
+
+    public void deleteAll(){
+        rsEventRepository.deleteAll();
     }
 }
