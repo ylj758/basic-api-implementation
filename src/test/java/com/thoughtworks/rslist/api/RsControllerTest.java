@@ -9,6 +9,7 @@ import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
+import com.thoughtworks.rslist.service.VoteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,52 +42,13 @@ class RsControllerTest {
     private UserService userService;
     @Autowired
     private RsEventService rsEventService;
+    @Autowired
+    private VoteService voteService;
 
     @BeforeEach
     void setUp(){
         userService.deleteAll();
         rsEventService.deleteAll();
-    }
-
-//    request: post /rs/vote/{rsEventId}
-//    request body: {
-//        voteNum: 5,
-//                userId: 1,
-//                voteTime: "current time"
-//    }
-//    接口要求：如果用户剩的票数大于等于voteNum，则能成功给rsEventId对应的热搜事件投票
-//    如果用户剩的票数小于voteNum,则投票失败，返回400
-//    考虑到以后需要查询投票记录的需求（根据userId查询他投过票的所有热搜事件，票数和投票时间，根据rsEventId查询所有给他投过票的用户，票数和投票时间），
-//    创建一个Vote表是一个明智的选择
-//            目前不用考虑给热搜事件列表排序的问题
-
-    @Test
-    void should_vote_unsuccess_when_left_votenum_not_more_than_votenum() throws Exception {
-        UserDto userDto = getAConcreteUser();
-        userService.register(userDto);
-        RsEvent rsEvent = RsEvent.builder()
-                .eventName("猪肉涨价了")
-                .keyword("经济")
-                .userId(1)
-                .build();
-        rsEventService.save(rsEvent);
-
-        VoteDto voteDto = VoteDto.builder()
-                .voteNum(100)
-                .voteTime(new Date(new java.util.Date().getTime()))
-                .userId(1)
-                .rsEventId(2)
-                .build();
-
-        mockMvc.perform(post("/rs/vote/{rsEventId}")
-                .content(new ObjectMapper().writeValueAsString(voteDto))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void should_vote_success_when_left_votenum_more_than_votenum(){
-
     }
 
     @Test
@@ -113,17 +75,31 @@ class RsControllerTest {
     }
 
 
-//    //隐藏userDto属性
-//    @Test
-//    void should_get_one_rs_event() throws Exception {
-//        mockMvc.perform(get("/rs/3"))
-//                .andExpect(jsonPath("$.eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$.keyword", is("无分类")))
-//                .andExpect(status().isOk())//.andReturn()
-//                .andExpect(jsonPath("$", not(hasKey("userDto"))));
-//    }
-//
-//    //隐藏userDto属性
+    @Test
+    void should_get_one_rs_event() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        VoteDto voteDto = VoteDto.builder()
+                .voteNum(2)
+                .voteTime(new Date(new java.util.Date().getTime()))
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteDto);
+
+        MvcResult mvcResult = mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk()).andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+//        "eventName: \"猪肉涨价了\", keyword: \"经济\", id: 2, voteNum: 2"
+    }
+
+
 //    @Test
 //    void should_get_rs_event_by_range_when_start_and_end_is_not_null() throws Exception {
 //        mockMvc.perform(get("/rs/list?start=1&end=3"))
@@ -237,21 +213,22 @@ class RsControllerTest {
 
 
 
-//    @Test
-//    void should_delete_one_rs_event() throws Exception {
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(3)));
-//
-//        mockMvc.perform(delete("/rs/delete?id=3"))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "2"));
-//
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(2)));
-//
-//    }
+    @Test
+    void should_delete_one_rs_event() throws Exception {
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(delete("/rs/delete?id=1"))
+                .andExpect(status().isCreated());
+
+        assertEquals(0, rsEventService.findAll().size());
+
+    }
 
     public UserDto getAConcreteUser(){
         return UserDto.builder()

@@ -48,4 +48,11 @@ public class UserService{
     public void deleteAll(){
         userRepository.deleteAll();
     }
+
+    public void updateLeftVoteNum(int id, int voteNum){
+        Optional<UserEntity> userEntityOptional = userRepository.findById(id);
+        UserEntity userEntity = userEntityOptional.get();
+        userEntity.setVote(voteNum);
+        userRepository.save(userEntity);
+    }
 }

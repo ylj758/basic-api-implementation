@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.sql.Date;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -94,6 +95,8 @@ class VoteControllerTest {
                 .andExpect(status().isCreated());
 
         assertEquals(1, voteService.findAll().size());
+        Optional<UserEntity> userEntityOptional = userService.findById(1);
+        assertEquals(10-2, userEntityOptional.get().getVote());
     }
 
     public UserDto getAConcreteUser(){

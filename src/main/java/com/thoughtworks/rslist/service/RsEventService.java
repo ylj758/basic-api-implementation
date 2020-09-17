@@ -39,6 +39,11 @@ public class RsEventService {
         rsEventRepository.save(rsEventEntity);
     }
 
+    public void deleteById(int id){
+        rsEventRepository.deleteById(id);
+    }
+
+
     public void deleteAll(){
         rsEventRepository.deleteAll();
     }

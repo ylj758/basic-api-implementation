@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.exceptions.CommentError;
 import com.thoughtworks.rslist.exceptions.InvalidIndexException;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
+import com.thoughtworks.rslist.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,6 +29,8 @@ public class RsController {
     RsEventService rsEventService;
     @Autowired
     UserService userService;
+    @Autowired
+    VoteService voteService;
 
     @PostMapping("/rs/event")
     public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent) {
@@ -39,14 +42,29 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-//  @JsonView(RsEvent.RsEventDetail.class)
-//  @GetMapping("/rs/{index}")
-//  public ResponseEntity<RsEvent> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
-//    if(index > rsList.size() || index < 1){
-//      throw new InvalidIndexException();
+    //    {
+//        eventName: "event name",
+//                keyword: "keyword",
+//            id: "id",
+//            voteNum: 10
 //    }
-//    return ResponseEntity.ok(rsList.get(index-1));
-//  }
+    @GetMapping("/rs/{index}")
+    public ResponseEntity<String> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
+        int size = rsEventService.findAll().size();
+        if (index < 0) {
+            throw new InvalidIndexException();
+        }
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(index);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        String eventName = rsEventEntity.getEventName();
+        String keyword = rsEventEntity.getKeyword();
+        int rsEventId = rsEventEntity.getId();
+        int voteNumSum = voteService.sumVoteNumByRsEventId(rsEventId);
+        String result = "eventName: \""+eventName+"\", keyword: \""+keyword+"\", id: "+ rsEventId + ", voteNum: "+voteNumSum;
+
+        return ResponseEntity.ok(result);
+    }
 //
 //  @JsonView(RsEvent.RsEventDetail.class)
 //  @GetMapping("/rs/list")
@@ -74,7 +92,7 @@ public class RsController {
         if (eventName == null || eventName.isEmpty()) {
             newEventName = rsEventEntity.getEventName();
         }
-        if (keyword  == null || keyword.isEmpty()) {
+        if (keyword == null || keyword.isEmpty()) {
             newKeyword = rsEventEntity.getKeyword();
         }
         RsEventEntity newRsEventEntity = RsEventEntity.builder()
@@ -87,12 +105,12 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-//
-//  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
-//  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
-//    rsList.remove(id-1);
-//    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
-//  }
+
+  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
+  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
+    rsEventService.deleteById(id);
+    return ResponseEntity.created(null).build();
+  }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception ex) {
