@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,8 +33,17 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
+    @Test
+    void should_get_user_by_id() throws Exception {
+        UserDto userDto = new UserDto("ylj", "femal", 25, "123@qq.com", "12345678911");
+        userService.register(userDto);
+
+        mockMvc.perform(get("/user/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("ylj")));
+    }
 
     @Test
     void should_register_user() throws Exception {

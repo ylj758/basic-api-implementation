@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +23,23 @@ class UserServiceTest {
 
     @Test
     void sholud_register_and_find_all_success() {
-        UserDto userDto = UserDto.builder()
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        List<UserEntity> userEntityList = userService.findAll();
+        assertEquals(1, userEntityList.size());
+        assertEquals("XiaoMing", userEntityList.get(0).getName());
+    }
+
+    @Test
+    void sholud_register_and_find_by_id(){
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        Optional<UserEntity> userEntity = userService.findById(1);
+        assertEquals(userEntity.isPresent(),true);
+    }
+
+    public UserDto getAConcreteUser(){
+        return UserDto.builder()
                 .name("XiaoMing")
                 .age(22)
                 .gender("male")
@@ -29,9 +47,5 @@ class UserServiceTest {
                 .phone("12345678900")
                 .vote(10)
                 .build();
-        userService.register(userDto);
-        List<UserEntity> userEntityList = userService.findAll();
-        assertEquals(1, userEntityList.size());
-        assertEquals("XiaoMing", userEntityList.get(0).getName());
     }
 }

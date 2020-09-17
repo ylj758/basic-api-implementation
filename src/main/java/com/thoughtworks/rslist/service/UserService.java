@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService{
@@ -21,6 +22,9 @@ public class UserService{
        return userRepository.findAll();
     }
 
+    public Optional<UserEntity> findById(Integer integer){
+        return userRepository.findById(integer);
+    }
     public void register(UserDto userDto){
         UserEntity userEntity = UserEntity.builder()
                 .name(userDto.getName())
@@ -31,5 +35,9 @@ public class UserService{
                 .vote(userDto.getVote())
                 .build();
         userRepository.save(userEntity);
+    }
+
+    public void clearData(){
+        userRepository.deleteAll();
     }
 }
