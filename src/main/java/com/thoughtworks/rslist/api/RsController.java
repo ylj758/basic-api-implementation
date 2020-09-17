@@ -23,20 +23,20 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  @Autowired
-  RsEventService rsEventService;
-  @Autowired
-  UserService userService;
+    @Autowired
+    RsEventService rsEventService;
+    @Autowired
+    UserService userService;
 
-  @PostMapping("/rs/event")
-  public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent){
-    List<UserEntity> userEntityList = userService.findAll();
-    if(!userService.existsById(rsEvent.getUserId())){
-      return ResponseEntity.badRequest().build();
+    @PostMapping("/rs/event")
+    public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent) {
+        List<UserEntity> userEntityList = userService.findAll();
+        if (!userService.existsById(rsEvent.getUserId())) {
+            return ResponseEntity.badRequest().build();
+        }
+        rsEventService.save(rsEvent);
+        return ResponseEntity.created(null).build();
     }
-    rsEventService.save(rsEvent);
-    return ResponseEntity.created(null).build();
-  }
 
 //  @JsonView(RsEvent.RsEventDetail.class)
 //  @GetMapping("/rs/{index}")
@@ -56,18 +56,22 @@ public class RsController {
 //    }
 //    return ResponseEntity.ok(rsList.subList(start-1,end));
 //  }
-//
-//  @PutMapping("/rs/update")
-//  public ResponseEntity<Object> updateRsEvent(@RequestParam Integer id,
-//                            @RequestParam(required = false) String eventName,
-//                            @RequestParam(required = false) String keyword){
-//    RsEvent rsEvent = rsList.get(id-1);
-//    if(eventName != null)
-//      rsEvent.setEventName(eventName);
-//    if(keyword != null)
-//      rsEvent.setKeyword(keyword);
-//    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
-//  }
+
+
+    //  接口要求：当userId和rsEventId所关联的User匹配时，更新rsEvent信息
+//  当userId和rsEventId所关联的User不匹配时，返回400
+//          userId为必传字段
+//  当只传了eventName没传keyword时只更新eventName
+//          当只传了keyword没传eventName时只更新keyword
+    @PutMapping("/patch/rs/{rsEventId}")
+    public ResponseEntity<Object> updateRsEvent(@PathVariable Integer rsEventId,
+                                                @RequestParam Integer userId,
+                                                @RequestParam(required = false) String eventName,
+                                                @RequestParam(required = false) String keyword) {
+        if (rsEventId != userId)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.created(null).build();
+    }
 //
 //  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
 //  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
@@ -75,11 +79,11 @@ public class RsController {
 //    return ResponseEntity.created(null).header("index",String.valueOf(rsList.size())).build();
 //  }
 
-  @ExceptionHandler({MethodArgumentNotValidException.class})
-  public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception ex) {
-    CommentError commentError = new CommentError();
-    commentError.setError("invalid param");
-     return ResponseEntity.status(400).body(commentError);
-  }
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception ex) {
+        CommentError commentError = new CommentError();
+        commentError.setError("invalid param");
+        return ResponseEntity.status(400).body(commentError);
+    }
 }
 
