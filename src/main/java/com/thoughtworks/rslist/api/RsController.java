@@ -86,6 +86,7 @@ public class RsController {
         rsEventService.update(newRsEventEntity);
         return ResponseEntity.created(null).build();
     }
+
 //
 //  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
 //  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
