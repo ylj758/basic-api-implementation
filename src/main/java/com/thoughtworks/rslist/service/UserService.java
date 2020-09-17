@@ -6,7 +6,6 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,6 @@ public class UserService{
     public void deleteById(int id){
         userRepository.deleteById(id);
     }
-
     public void register(UserDto userDto){
         UserEntity userEntity = UserEntity.builder()
                 .name(userDto.getName())
@@ -42,6 +40,4 @@ public class UserService{
                 .build();
         userRepository.save(userEntity);
     }
-
-
 }

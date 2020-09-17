@@ -2,7 +2,6 @@ package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
