@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -33,13 +35,41 @@ class UserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RsEventService rsEventService;
+
+    @Test
+    void should_delete_user_cascade_rs_event() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        assertEquals(1, userService.findAll().size());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        assertEquals(1, rsEventService.findAll().size());
+
+        mockMvc.perform(delete("/delete/1"))
+                .andExpect(status().isNoContent());
+
+        assertEquals(0, userService.findAll().size());
+        assertEquals(0, rsEventService.findAll().size());
+    }
 
     @Test
     void should_delete_user_by_id() throws Exception {
-        UserDto userDto = new UserDto("ylj", "femal", 25, "123@qq.com", "12345678911");
+        UserDto userDto = getAConcreteUser();
         userService.register(userDto);
+        List<UserEntity> userEntityList = userService.findAll();
+        assertEquals(1, userEntityList.size());
+
         mockMvc.perform(delete("/delete/1"))
                 .andExpect(status().isNoContent());
+
+        userEntityList = userService.findAll();
+        assertEquals(0, userEntityList.size());
     }
 
     @Test
@@ -58,10 +88,16 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
+        Optional<UserEntity> userEntity = userService.findById(1);
+        assertEquals(userEntity.isPresent(),false);
+
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+
+        userEntity = userService.findById(1);
+        assertEquals(userEntity.isPresent(),true);
     }
 
     @Test
@@ -186,16 +222,24 @@ class UserControllerTest {
 
     @Test
     void should_get_all_user() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/user/users"))
-                .andExpect(status().isOk()).andReturn();
-        MockHttpServletResponse response= mvcResult.getResponse();
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
 
-        List<UserDto> userDtos = new ArrayList<>();
-        userDtos.add(new UserDto("ylj1", "femal", 25, "123@qq.com", "12345678911"));
-        userDtos.add(new UserDto("ylj2", "femal", 25, "123@qq.com", "12345678911"));
-        userDtos.add(new UserDto("ylj3", "femal", 25, "123@qq.com", "12345678911"));
-        assertEquals(new ObjectMapper().writeValueAsString(userDtos), response.getContentAsString() );
-
+        mockMvc.perform(get("/user/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name", is("XiaoMing")));
     }
 
+
+    public UserDto getAConcreteUser(){
+        return UserDto.builder()
+                .name("XiaoMing")
+                .age(22)
+                .gender("male")
+                .email("768@qq.com")
+                .phone("12345678900")
+                .vote(10)
+                .build();
+    }
 }

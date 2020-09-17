@@ -25,23 +25,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    private List<UserDto> userDtos = initUserDtos();
-
-    private List<UserDto> initUserDtos() {
-        List<UserDto> tempUserDtos = new ArrayList<>();
-        UserDto userDto1 = new UserDto("ylj1", "femal", 25, "123@qq.com", "12345678911");
-        UserDto userDto2 = new UserDto("ylj2", "femal", 25, "123@qq.com", "12345678911");
-        UserDto userDto3 = new UserDto("ylj3", "femal", 25, "123@qq.com", "12345678911");
-        tempUserDtos.add(userDto1);
-        tempUserDtos.add(userDto2);
-        tempUserDtos.add(userDto3);
-        return tempUserDtos;
-    }
-
-    public List<UserDto> getUserDtos() {
-        return userDtos;
-    }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> register(@PathVariable int id){
         userService.deleteById(id);
@@ -73,10 +56,9 @@ public class UserController {
     }
 
 
-
     @GetMapping("/user/users")
-    public ResponseEntity<String> getAllUsers() throws JsonProcessingException {
-        return ResponseEntity.ok(new ObjectMapper().writeValueAsString(userDtos));
+    public ResponseEntity<List<UserEntity>> getAllUsers() throws JsonProcessingException {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
