@@ -28,10 +28,10 @@ public class VoteService {
         return voteResponsitory.findAll();
     }
 
-    public int sumVoteNumByRsEventId(int id){
-        List<Object[]> list = voteResponsitory.sumVoteNumByRsEventId(id);
-        return 0;
+    public List<VoteEntity> findByRsEventId(int id){
+       return voteResponsitory.findByRsEventId(id);
     }
+
 
     public void deleteAll(){
         voteResponsitory.deleteAll();

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.exceptions.CommentError;
 import com.thoughtworks.rslist.exceptions.InvalidIndexException;
 import com.thoughtworks.rslist.service.RsEventService;
@@ -54,21 +55,24 @@ public class RsController {
         String eventName = rsEventEntity.getEventName();
         String keyword = rsEventEntity.getKeyword();
         int rsEventId = rsEventEntity.getId();
-        int voteNumSum = voteService.sumVoteNumByRsEventId(rsEventId);
+        List<VoteEntity> voteEntityList = voteService.findByRsEventId(index);
+        int voteNumSum = voteEntityList.stream().mapToInt(VoteEntity::getVoteNum).sum();
+
         String result = "eventName: \""+eventName+"\", keyword: \""+keyword+"\", id: "+ rsEventId + ", voteNum: "+voteNumSum;
 
         return ResponseEntity.ok(result);
     }
-//
-//  @JsonView(RsEvent.RsEventDetail.class)
-//  @GetMapping("/rs/list")
-//  public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
-//                              @RequestParam(required = false) Integer end) throws JsonProcessingException {
-//    if(start == null || end == null){
-//      return ResponseEntity.ok(rsList);
-//    }
-//    return ResponseEntity.ok(rsList.subList(start-1,end));
-//  }
+
+  @JsonView(RsEvent.RsEventDetail.class)
+  @GetMapping("/rs/list")
+  public ResponseEntity<List<RsEventEntity>> getRsEventByRange(@RequestParam(required = false) Integer start,
+                              @RequestParam(required = false) Integer end) throws JsonProcessingException {
+    List<RsEventEntity> rsList = rsEventService.findAll();
+    if(start == null || end == null){
+      return ResponseEntity.ok(rsList);
+    }
+    return ResponseEntity.ok(rsList.subList(start-1,end));
+  }
 
 
     @PutMapping("/patch/rs/{rsEventId}")

@@ -11,8 +11,5 @@ import java.util.List;
 public interface VoteResponsitory extends CrudRepository<VoteEntity, Integer> {
     List<VoteEntity> findAll();
 
-
-    @Query("select SUM(v.voteNum) from VoteEntity v where v.id = ?1")
-    List<Object[]> sumVoteNumByRsEventId(int id);
-
+    List<VoteEntity> findByRsEventId(int id);
 }

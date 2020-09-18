@@ -93,41 +93,68 @@ class RsControllerTest {
                 .rsEventId(2)
                 .build();
         voteService.save(voteDto);
+        voteService.save(voteDto);
 
         MvcResult mvcResult = mockMvc.perform(get("/rs/2"))
                 .andExpect(status().isOk()).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
-//        "eventName: \"猪肉涨价了\", keyword: \"经济\", id: 2, voteNum: 2"
+
+        assertEquals("eventName: \"猪肉涨价了\", keyword: \"经济\", id: 2, voteNum: 4", mvcResult.getResponse().getContentAsString());
     }
 
 
-//    @Test
-//    void should_get_rs_event_by_range_when_start_and_end_is_not_null() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=1&end=3"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(3)))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyword", is("无分类")))
-//                .andExpect(jsonPath("$[2]", not(hasKey("userDto"))));
-//    }
-//
-//    @Test
-//    void should_get_rs_event_by_range_when_start_is_null() throws Exception {
-//        mockMvc.perform(get("/rs/list?end=3"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(3)))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyword", is("无分类")));
-//    }
-//
-//    @Test
-//    void should_get_rs_event_by_range_when_end_is_null() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=1"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(3)))
-//                .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-//                .andExpect(jsonPath("$[2].keyword", is("无分类")));
-//    }
+    @Test
+    void should_get_rs_event_by_range_when_start_and_end_is_not_null() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        RsEvent rsEvent1 = RsEvent.builder()
+                .eventName("股票涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent1);
+
+        mockMvc.perform(get("/rs/list?start=1&end=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    void should_get_rs_event_by_range_when_start_is_null() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+
+        mockMvc.perform(get("/rs/list?end=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    void should_get_rs_event_by_range_when_end_is_null() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+
+        mockMvc.perform(get("/rs/list?start=1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
 
     @Test
     void should_update_one_rs_event_when_user_id_and_rs_user_id_not_match() throws Exception {
