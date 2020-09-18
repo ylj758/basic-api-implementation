@@ -12,4 +12,6 @@ public interface VoteResponsitory extends CrudRepository<VoteEntity, Integer> {
     List<VoteEntity> findAll();
 
     List<VoteEntity> findByRsEventId(int id);
+
+    List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId);
 }

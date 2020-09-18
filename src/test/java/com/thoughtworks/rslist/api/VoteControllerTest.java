@@ -10,6 +10,7 @@ import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.sql.Date;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -43,9 +48,25 @@ class VoteControllerTest {
 
     @BeforeEach
     void setUp() {
+
+    }
+
+    @AfterEach
+    void tearDown(){
         userService.deleteAll();
         rsEventService.deleteAll();
+        voteService.deleteAll();
     }
+
+    @Test
+    void should_get_vote_by_user_id_and_rs_event_id() throws Exception {
+        setData();
+        mockMvc.perform(get("/vote?userId=1&rsEventId=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$[0].userId", is(1)));
+    }
+
 
     @Test
     void should_vote_unsuccess_when_left_votenum_not_more_than_votenum() throws Exception {
@@ -108,5 +129,26 @@ class VoteControllerTest {
                 .phone("12345678900")
                 .vote(10)
                 .build();
+    }
+
+    private void setData(){
+        userService.register(getAConcreteUser());
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        VoteDto voteDto = VoteDto.builder()
+                .voteNum(1)
+                .voteTime(null)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        for(int i=0; i<8; i++){
+            voteService.save(voteDto);
+        }
+
+
     }
 }

@@ -34,6 +34,9 @@ public class VoteService {
        return voteResponsitory.findByRsEventId(id);
     }
 
+    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId){
+        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId);
+    }
 
     public void deleteAll(){
         voteResponsitory.deleteAll();
