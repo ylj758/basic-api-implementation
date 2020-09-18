@@ -25,46 +25,46 @@ class VoteController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/vote")
-    public List<VoteDto> getVoteByUserIdAndrsEventId(@RequestParam int userId,
-                                                     @RequestParam int rsEventId,
-                                                     @RequestParam(defaultValue = "1") int pageIndex) {
-        int pageSize = 5;
-        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
-         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
-         List<VoteDto> voteDtoList = voteEntities.stream()
-                 .map(voteEntity -> VoteDto.builder()
-                         .userId(voteEntity.getUserId())
-                         .rsEventId(voteEntity.getRsEventId())
-                         .voteNum(voteEntity.getVoteNum())
-                         .voteTime(voteEntity.getVoteTime())
-                         .build())
-                 .collect(Collectors.toList());
-         return voteDtoList;
-    }
+//    @GetMapping("/vote")
+//    public List<VoteDto> getVoteByUserIdAndrsEventId(@RequestParam int userId,
+//                                                     @RequestParam int rsEventId,
+//                                                     @RequestParam(defaultValue = "1") int pageIndex) {
+//        int pageSize = 5;
+//        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
+//         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+//         List<VoteDto> voteDtoList = voteEntities.stream()
+//                 .map(voteEntity -> VoteDto.builder()
+//                         .userId(voteEntity.getUserId())
+//                         .rsEventId(voteEntity.getRsEventId())
+//                         .voteNum(voteEntity.getVoteNum())
+//                         .voteTime(voteEntity.getVoteTime())
+//                         .build())
+//                 .collect(Collectors.toList());
+//         return voteDtoList;
+//    }
 
-
-    @PostMapping("/rs/vote/{rsEventId}")
-    @Transactional
-    public ResponseEntity<Object> addVote(@PathVariable Integer rsEventId,
-                                             @Valid @RequestBody VoteDto voteDto) {
-        Optional<UserEntity> userEntityOptional = userService.findById(voteDto.getUserId());
-        UserEntity userEntity = userEntityOptional.get();
-        if(userEntity.getVote() < voteDto.getVoteNum()){
-            return ResponseEntity.badRequest().build();
-        }
-        voteService.save(voteDto);
-        userService.updateLeftVoteNum(voteDto.getUserId(), userEntity.getVote()-voteDto.getVoteNum());
-        return ResponseEntity.created(null).build();
-    }
-
-
-    public VoteDto voteEntityConvertVoteDto(VoteEntity voteEntity){
-        return VoteDto.builder()
-                .userId(voteEntity.getUserId())
-                .rsEventId(voteEntity.getRsEventId())
-                .voteNum(voteEntity.getVoteNum())
-                .voteTime(voteEntity.getVoteTime())
-                .build();
-    }
+//
+//    @PostMapping("/rs/vote/{rsEventId}")
+//    @Transactional
+//    public ResponseEntity<Object> addVote(@PathVariable Integer rsEventId,
+//                                             @Valid @RequestBody VoteDto voteDto) {
+//        Optional<UserEntity> userEntityOptional = userService.findById(voteDto.getUserId());
+//        UserEntity userEntity = userEntityOptional.get();
+//        if(userEntity.getVote() < voteDto.getVoteNum()){
+//            return ResponseEntity.badRequest().build();
+//        }
+//        voteService.save(voteDto);
+//        userService.updateLeftVoteNum(voteDto.getUserId(), userEntity.getVote()-voteDto.getVoteNum());
+//        return ResponseEntity.created(null).build();
+//    }
+//
+//
+//    public VoteDto voteEntityConvertVoteDto(VoteEntity voteEntity){
+//        return VoteDto.builder()
+//                .userId(voteEntity.getUserId())
+//                .rsEventId(voteEntity.getRsEventId())
+//                .voteNum(voteEntity.getVoteNum())
+//                .voteTime(voteEntity.getVoteTime())
+//                .build();
+//    }
 }

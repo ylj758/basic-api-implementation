@@ -16,28 +16,28 @@ public class VoteService {
     @Autowired
     VoteResponsitory voteResponsitory;
 
-    public void save(VoteDto voteDto){
-        VoteEntity voteEntity = VoteEntity.builder()
-                .voteNum(voteDto.getVoteNum())
-                .voteTime(LocalDateTime.now())
-                .rsEventId(voteDto.getRsEventId())
-                .userId(voteDto.getUserId())
-                .build();
-
-        voteResponsitory.save(voteEntity);
-    }
-
-    public List<VoteEntity> findAll(){
-        return voteResponsitory.findAll();
-    }
-
-    public List<VoteEntity> findByRsEventId(int id){
-       return voteResponsitory.findByRsEventId(id);
-    }
-
-    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
-        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
-    }
+//    public void save(VoteDto voteDto){
+//        VoteEntity voteEntity = VoteEntity.builder()
+//                .voteNum(voteDto.getVoteNum())
+//                .voteTime(LocalDateTime.now())
+//                .rsEventId(voteDto.getRsEventId())
+//                .userId(voteDto.getUserId())
+//                .build();
+//
+//        voteResponsitory.save(voteEntity);
+//    }
+//
+//    public List<VoteEntity> findAll(){
+//        return voteResponsitory.findAll();
+//    }
+//
+//    public List<VoteEntity> findByRsEventId(int id){
+//       return voteResponsitory.findByRsEventId(id);
+//    }
+//
+//    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
+//        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+//    }
 
     public void deleteAll(){
         voteResponsitory.deleteAll();
