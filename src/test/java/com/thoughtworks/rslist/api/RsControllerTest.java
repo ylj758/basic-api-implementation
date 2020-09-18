@@ -88,7 +88,7 @@ class RsControllerTest {
         rsEventService.save(rsEvent);
         VoteDto voteDto = VoteDto.builder()
                 .voteNum(2)
-                .voteTime(new Date(new java.util.Date().getTime()))
+                .voteTime(null)
                 .userId(1)
                 .rsEventId(2)
                 .build();

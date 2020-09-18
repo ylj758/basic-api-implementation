@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,10 +18,11 @@ public class VoteService {
     public void save(VoteDto voteDto){
         VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(voteDto.getVoteNum())
-                .voteTime(voteDto.getVoteTime())
+                .voteTime(LocalDateTime.now())
                 .rsEventId(voteDto.getRsEventId())
                 .userId(voteDto.getUserId())
                 .build();
+
         voteResponsitory.save(voteEntity);
     }
 

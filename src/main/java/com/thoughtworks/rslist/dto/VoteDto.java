@@ -10,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -20,7 +21,7 @@ public class VoteDto {
     private int rsEventId;
     @NotNull
     private int userId;
-    private Date voteTime;
+    private LocalDateTime voteTime;
     @NotNull
     private int voteNum;
 }
