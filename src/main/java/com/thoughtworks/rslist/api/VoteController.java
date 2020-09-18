@@ -7,6 +7,8 @@ import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,11 @@ class VoteController {
 
     @GetMapping("/vote")
     public List<VoteDto> getVoteByUserIdAndrsEventId(@RequestParam int userId,
-                                                     @RequestParam int rsEventId) {
-         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId);
+                                                     @RequestParam int rsEventId,
+                                                     @RequestParam(defaultValue = "1") int pageIndex) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
+         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
          List<VoteDto> voteDtoList = voteEntities.stream()
                  .map(voteEntity -> VoteDto.builder()
                          .userId(voteEntity.getUserId())

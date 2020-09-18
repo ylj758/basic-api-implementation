@@ -58,15 +58,20 @@ class VoteControllerTest {
         voteService.deleteAll();
     }
 
+
     @Test
-    void should_get_vote_by_user_id_and_rs_event_id() throws Exception {
+    void should_get_vote_by_user_id_and_rs_event_id_page() throws Exception {
         setData();
         mockMvc.perform(get("/vote?userId=1&rsEventId=2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$", hasSize(5)))
                 .andExpect(jsonPath("$[0].userId", is(1)));
-    }
 
+        mockMvc.perform(get("/vote?userId=1&rsEventId=2&pageIndex=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0].voteNum", is(1)));
+    }
 
     @Test
     void should_vote_unsuccess_when_left_votenum_not_more_than_votenum() throws Exception {

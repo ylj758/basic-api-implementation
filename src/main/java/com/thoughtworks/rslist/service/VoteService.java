@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.repository.VoteResponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,8 @@ public class VoteService {
        return voteResponsitory.findByRsEventId(id);
     }
 
-    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId){
-        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId);
+    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
+        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
     }
 
     public void deleteAll(){
