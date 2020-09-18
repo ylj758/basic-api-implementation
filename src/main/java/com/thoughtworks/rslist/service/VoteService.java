@@ -16,6 +16,10 @@ public class VoteService {
     @Autowired
     VoteResponsitory voteResponsitory;
 
+    public void save(VoteEntity voteEntity){
+        voteResponsitory.save(voteEntity);
+    }
+
 //    public void save(VoteDto voteDto){
 //        VoteEntity voteEntity = VoteEntity.builder()
 //                .voteNum(voteDto.getVoteNum())
@@ -35,9 +39,9 @@ public class VoteService {
 //       return voteResponsitory.findByRsEventId(id);
 //    }
 //
-//    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
-//        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
-//    }
+    public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
+        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+    }
 
     public void deleteAll(){
         voteResponsitory.deleteAll();
