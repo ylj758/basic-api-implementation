@@ -49,6 +49,7 @@ class RsControllerTest {
     void setUp(){
         userService.deleteAll();
         rsEventService.deleteAll();
+        voteService.deleteAll();
     }
 
     @Test
@@ -215,6 +216,7 @@ class RsControllerTest {
 
     @Test
     void should_delete_one_rs_event() throws Exception {
+        userService.register(getAConcreteUser());
         RsEvent rsEvent = RsEvent.builder()
                 .eventName("猪肉涨价了")
                 .keyword("经济")
@@ -222,11 +224,13 @@ class RsControllerTest {
                 .build();
         rsEventService.save(rsEvent);
         assertEquals(1, rsEventService.findAll().size());
+        assertEquals(1, userService.findAll().size());
 
-        mockMvc.perform(delete("/rs/delete?id=1"))
+        mockMvc.perform(delete("/rs/delete?id=2"))
                 .andExpect(status().isCreated());
 
         assertEquals(0, rsEventService.findAll().size());
+        assertEquals(1, userService.findAll().size());
 
     }
 

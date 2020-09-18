@@ -32,4 +32,9 @@ public class VoteService {
         List<Object[]> list = voteResponsitory.sumVoteNumByRsEventId(id);
         return 0;
     }
+
+    public void deleteAll(){
+        voteResponsitory.deleteAll();
+    }
+
 }

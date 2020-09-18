@@ -2,15 +2,13 @@ package com.thoughtworks.rslist.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Builder
@@ -24,15 +22,19 @@ public class RsEventEntity {
     private Integer id;
     private String eventName;
     private String keyword;
-    private int userId;
-    @JsonIgnore
-    public int getUserId() {
-        return userId;
-    }
-    @JsonProperty
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+
+    @JsonProperty
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+    @JsonIgnore
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 
 }

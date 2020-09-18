@@ -1,8 +1,11 @@
 package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.dto.RsEvent;
+import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,11 @@ import java.util.Optional;
 public class RsEventService {
     @Autowired
     RsEventRepository rsEventRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public List<RsEventEntity> findAll(){
-       return rsEventRepository.findAll();
+        return rsEventRepository.findAll();
     }
 
     public Optional<RsEventEntity> findById(int id){
@@ -23,10 +28,13 @@ public class RsEventService {
     }
 
     public void save(RsEvent rsEvent){
+
+        Optional<UserEntity> userEntityOptional =  userRepository.findById(rsEvent.getUserId());
+
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
                 .keyword(rsEvent.getKeyword())
-                .userId(rsEvent.getUserId())
+                .userEntity(userEntityOptional.get())
                 .build();
         rsEventRepository.save(rsEventEntity);
     }

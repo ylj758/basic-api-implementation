@@ -42,12 +42,6 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-    //    {
-//        eventName: "event name",
-//                keyword: "keyword",
-//            id: "id",
-//            voteNum: 10
-//    }
     @GetMapping("/rs/{index}")
     public ResponseEntity<String> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
         int size = rsEventService.findAll().size();
@@ -85,7 +79,7 @@ public class RsController {
 
         Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(rsEventId);
         RsEventEntity rsEventEntity = rsEventEntityOptional.get();
-        if (rsEventEntity.getUserId() != userId)
+        if (rsEventEntity.getUserEntity().getId() != userId)
             return ResponseEntity.badRequest().build();
         String newEventName = eventName;
         String newKeyword = keyword;
@@ -99,18 +93,18 @@ public class RsController {
                 .id(rsEventId)
                 .eventName(newEventName)
                 .keyword(newKeyword)
-                .userId(userId)
+                .userEntity(rsEventEntity.getUserEntity())
                 .build();
         rsEventService.update(newRsEventEntity);
         return ResponseEntity.created(null).build();
     }
 
 
-  @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
-  public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
-    rsEventService.deleteById(id);
-    return ResponseEntity.created(null).build();
-  }
+    @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
+        rsEventService.deleteById(id);
+        return ResponseEntity.created(null).build();
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception ex) {

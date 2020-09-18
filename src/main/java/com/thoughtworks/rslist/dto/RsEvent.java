@@ -30,6 +30,8 @@ public class RsEvent implements Serializable {
     @NotNull
     private int userId;
 
+    private UserDto userDto;
+
     public RsEvent(String eventName, String keyword) {
         this.eventName = eventName;
         this.keyword = keyword;
@@ -43,5 +45,14 @@ public class RsEvent implements Serializable {
     @JsonProperty
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    @JsonProperty
+    public UserDto getUserDto() {
+        return userDto;
+    }
+    @JsonIgnore
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 }
