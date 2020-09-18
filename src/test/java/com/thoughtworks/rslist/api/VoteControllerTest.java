@@ -7,6 +7,7 @@ import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
@@ -135,6 +136,16 @@ class VoteControllerTest {
                 .vote(10)
                 .build();
     }
+    public UserEntity getUserEntity(){
+        return UserEntity.builder()
+                .name("XiaoMing")
+                .age(22)
+                .gender("male")
+                .email("768@qq.com")
+                .phone("12345678900")
+                .vote(10)
+                .build();
+    }
 
     private void setData(){
         userService.register(getAConcreteUser());
@@ -144,14 +155,20 @@ class VoteControllerTest {
                 .userId(1)
                 .build();
         rsEventService.save(rsEvent);
-        VoteDto voteDto = VoteDto.builder()
-                .voteNum(1)
-                .voteTime(null)
-                .userId(1)
-                .rsEventId(2)
-                .build();
+//        VoteEntity voteEntity = VoteEntity.builder()
+//                .voteNum(1)
+//                .voteTime(null)
+//                .userId(1)
+//                .rsEventId(2)
+//                .build();
         for(int i=0; i<8; i++){
-            voteService.save(voteDto);
+            VoteEntity voteEntity = VoteEntity.builder()
+                    .voteNum(1)
+                    .voteTime(null)
+                    .userId(1)
+                    .rsEventId(2)
+                    .build();
+            voteService.save(voteEntity);
         }
 
 

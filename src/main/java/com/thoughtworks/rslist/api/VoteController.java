@@ -25,22 +25,23 @@ class VoteController {
     @Autowired
     UserService userService;
 
+
     @GetMapping("/vote")
     public List<VoteDto> getVoteByUserIdAndrsEventId(@RequestParam int userId,
                                                      @RequestParam int rsEventId,
                                                      @RequestParam(defaultValue = "1") int pageIndex) {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
-         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
-         List<VoteDto> voteDtoList = voteEntities.stream()
-                 .map(voteEntity -> VoteDto.builder()
-                         .userId(voteEntity.getUserId())
-                         .rsEventId(voteEntity.getRsEventId())
-                         .voteNum(voteEntity.getVoteNum())
-                         .voteTime(voteEntity.getVoteTime())
-                         .build())
-                 .collect(Collectors.toList());
-         return voteDtoList;
+        List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+        List<VoteDto> voteDtoList = voteEntities.stream()
+                .map(voteEntity -> VoteDto.builder()
+                        .userId(voteEntity.getUserId())
+                        .rsEventId(voteEntity.getRsEventId())
+                        .voteNum(voteEntity.getVoteNum())
+                        .voteTime(voteEntity.getVoteTime())
+                        .build())
+                .collect(Collectors.toList());
+        return voteDtoList;
     }
 
 

@@ -16,6 +16,10 @@ public class VoteService {
     @Autowired
     VoteResponsitory voteResponsitory;
 
+    public void save(VoteEntity voteEntity){
+        voteResponsitory.save(voteEntity);
+    }
+
     public void save(VoteDto voteDto){
         VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(voteDto.getVoteNum())

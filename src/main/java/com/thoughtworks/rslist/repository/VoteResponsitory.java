@@ -13,7 +13,10 @@ import java.util.List;
 public interface VoteResponsitory extends CrudRepository<VoteEntity, Integer> {
     List<VoteEntity> findAll();
 
+
     List<VoteEntity> findByRsEventId(int id);
 
+    @Query(nativeQuery = true, value = "SELECT * FROM vote WHERE user_id = ?1 AND rs_event_id = ?2")
+//    @Query("SELECT v FROM VoteEntity v WHERE v.userId = ?1 AND v.rsEventId = ?2")
     List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable);
 }
