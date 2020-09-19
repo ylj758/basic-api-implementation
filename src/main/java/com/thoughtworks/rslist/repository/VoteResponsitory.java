@@ -14,7 +14,7 @@ import java.util.List;
 public interface VoteResponsitory extends CrudRepository<VoteEntity, Integer> {
     List<VoteEntity> findAll();
 
-    List<VoteEntity> findAllByRsEventId(int id);
+    List<VoteEntity> findAllByRsEventEntityId(int id);
 
     List<VoteEntity> findAllByVoteTimeBetween(LocalDateTime start, LocalDateTime end);
 

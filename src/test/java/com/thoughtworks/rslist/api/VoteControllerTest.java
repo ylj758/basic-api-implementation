@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserDto;
@@ -57,9 +56,9 @@ class VoteControllerTest {
 
     @AfterEach
     void tearDown() {
-        userService.deleteAll();
-        rsEventService.deleteAll();
         voteService.deleteAll();
+        rsEventService.deleteAll();
+        userService.deleteAll();
     }
 
     @Test
@@ -164,21 +163,29 @@ class VoteControllerTest {
     }
 
     private void setData() {
-        userService.register(getAConcreteUser());
-        RsEvent rsEvent = RsEvent.builder()
+        UserEntity userEntity = UserEntity.builder()
+                .name("XiaoMing")
+                .age(22)
+                .gender("male")
+                .email("768@qq.com")
+                .phone("12345678900")
+                .vote(10)
+                .build();
+        userService.save(userEntity);
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("猪肉涨价了")
                 .keyword("经济")
-                .userId(1)
+                .userEntity(userEntity)
                 .build();
-        rsEventService.save(rsEvent);
+        rsEventService.save(rsEventEntity);
 
         String str1 = "2020年09月18日 09:10:00";
         LocalDateTime date1 = LocalDateTime.parse(str1, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
         VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date1)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(rsEventEntity.getUserEntity())
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -187,8 +194,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date2)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -198,8 +205,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date3)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -208,8 +215,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date4)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -218,8 +225,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date5)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -228,8 +235,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date6)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -238,8 +245,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date7)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 
@@ -248,8 +255,8 @@ class VoteControllerTest {
         voteEntity = VoteEntity.builder()
                 .voteNum(1)
                 .voteTime(date8)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
         voteService.save(voteEntity);
 }

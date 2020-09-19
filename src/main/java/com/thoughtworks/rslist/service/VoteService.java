@@ -23,24 +23,13 @@ public class VoteService {
     public void save(VoteEntity voteEntity){
         voteResponsitory.save(voteEntity);
     }
-    public void save(VoteDto voteDto){
-        VoteEntity voteEntity = VoteEntity.builder()
-                .voteNum(voteDto.getVoteNum())
-                .voteTime(voteDto.getVoteTime())
-                .voteTime(voteDto.getVoteTime())
-                .rsEventId(voteDto.getRsEventId())
-                .userId(voteDto.getUserId())
-                .build();
-
-        voteResponsitory.save(voteEntity);
-    }
 
     public List<VoteEntity> findAll(){
         return voteResponsitory.findAll();
     }
 
     public List<VoteEntity> findAllByRsEventId(int id){
-       return voteResponsitory.findAllByRsEventId(id);
+       return voteResponsitory.findAllByRsEventEntityId(id);
     }
 
     public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){

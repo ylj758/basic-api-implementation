@@ -28,7 +28,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/user/delete-user/{id}")
     public ResponseEntity<Object> register(@PathVariable int id){
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/user/register-user")
     public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto){
         userService.register(userDto);
         return ResponseEntity.created(null).build();

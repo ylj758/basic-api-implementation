@@ -7,6 +7,7 @@ import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
@@ -45,18 +46,6 @@ class RsControllerTest {
     @Autowired
     private VoteService voteService;
 
-//    MockMvc mockMvc;
-//    UserService userService;
-//    RsEventService rsEventService;
-//    VoteService voteService;
-//    @Autowired
-//    public RsControllerTest(MockMvc mockMvc, UserService userService, RsEventService rsEventService, VoteService voteService){
-//        this.mockMvc = mockMvc;
-//        this.userService = userService;
-//        this.rsEventService = rsEventService;
-//        this.voteService = voteService;
-//    }
-
     @BeforeEach
     void setUp(){
         userService.deleteAll();
@@ -90,22 +79,28 @@ class RsControllerTest {
 
     @Test
     void should_get_one_rs_event() throws Exception {
-        UserDto userDto = getAConcreteUser();
-        userService.register(userDto);
-        RsEvent rsEvent = RsEvent.builder()
+        UserEntity userEntity = getAConcreteUserEntity();
+        userService.save(userEntity);
+        RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("猪肉涨价了")
                 .keyword("经济")
-                .userId(1)
+                .userEntity(userEntity)
                 .build();
-        rsEventService.save(rsEvent);
-        VoteDto voteDto = VoteDto.builder()
+        rsEventService.save(rsEventEntity);
+        VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(2)
                 .voteTime(null)
-                .userId(1)
-                .rsEventId(2)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
                 .build();
-        voteService.save(voteDto);
-        voteService.save(voteDto);
+        voteService.save(voteEntity);
+        voteEntity = VoteEntity.builder()
+                .voteNum(2)
+                .voteTime(null)
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
 
         MvcResult mvcResult = mockMvc.perform(get("/rs/2"))
                 .andExpect(status().isOk()).andReturn();
@@ -265,7 +260,7 @@ class RsControllerTest {
         assertEquals(1, rsEventService.findAll().size());
         assertEquals(1, userService.findAll().size());
 
-        mockMvc.perform(delete("/rs/delete?id=2"))
+        mockMvc.perform(delete("/rs/delete-user?id=2"))
                 .andExpect(status().isCreated());
 
         assertEquals(0, rsEventService.findAll().size());
@@ -275,6 +270,16 @@ class RsControllerTest {
 
     public UserDto getAConcreteUser(){
         return UserDto.builder()
+                .name("XiaoMing")
+                .age(22)
+                .gender("male")
+                .email("768@qq.com")
+                .phone("12345678900")
+                .vote(10)
+                .build();
+    }
+    public UserEntity getAConcreteUserEntity(){
+        return UserEntity.builder()
                 .name("XiaoMing")
                 .age(22)
                 .gender("male")

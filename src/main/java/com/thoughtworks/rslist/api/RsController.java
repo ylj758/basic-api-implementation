@@ -107,7 +107,7 @@ public class RsController {
     }
 
 
-    @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/rs/delete-user",method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
         rsEventService.deleteById(id);
         return ResponseEntity.created(null).build();

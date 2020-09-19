@@ -2,8 +2,10 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.VoteDto;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.entity.VoteEntity;
+import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ import java.util.stream.Collectors;
 class VoteController {
     VoteService voteService;
     UserService userService;
+    RsEventService rsEventService;
     @Autowired
-    public VoteController( VoteService voteService, UserService userService){
+    public VoteController( VoteService voteService, UserService userService, RsEventService rsEventService){
         this.voteService = voteService;
         this.userService = userService;
+        this.rsEventService = rsEventService;
     }
 
 
@@ -63,7 +67,7 @@ class VoteController {
         if(userEntity.getVote() < voteDto.getVoteNum()){
             return ResponseEntity.badRequest().build();
         }
-        voteService.save(voteDto);
+        voteService.save(voteDtoConvertVoteEntity(voteDto));
         userService.updateLeftVoteNum(voteDto.getUserId(), userEntity.getVote()-voteDto.getVoteNum());
         return ResponseEntity.created(null).build();
     }
@@ -72,11 +76,22 @@ class VoteController {
     public List<VoteDto> voteEntityListConvertVoteDtoList(List<VoteEntity> voteEntities){
         return voteEntities.stream()
                 .map(voteEntity -> VoteDto.builder()
-                        .userId(voteEntity.getUserId())
-                        .rsEventId(voteEntity.getRsEventId())
+                        .userId(voteEntity.getUserEntity().getId())
+                        .rsEventId(voteEntity.getRsEventEntity().getId())
                         .voteNum(voteEntity.getVoteNum())
                         .voteTime(voteEntity.getVoteTime())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public VoteEntity voteDtoConvertVoteEntity(VoteDto voteDto){
+        Optional<UserEntity> userEntity = userService.findById(voteDto.getUserId());
+        Optional<RsEventEntity> rsEventEntity = rsEventService.findById(voteDto.getRsEventId());
+        return VoteEntity.builder()
+                .voteNum(voteDto.getVoteNum())
+                .userEntity(userEntity.get())
+                .rsEventEntity(rsEventEntity.get())
+                .voteTime(voteDto.getVoteTime())
+                .build();
     }
 }
