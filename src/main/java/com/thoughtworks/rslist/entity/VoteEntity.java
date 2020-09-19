@@ -25,4 +25,6 @@ public class VoteEntity {
     private int userId;
     private LocalDateTime voteTime;
     private int voteNum;
+
+
 }

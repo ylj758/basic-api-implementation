@@ -29,13 +29,16 @@ class VoteController {
 
 
     @GetMapping("/vote/time")
-    public List<VoteDto> getVoteTimeBetween(@RequestParam String start,
+    public ResponseEntity<List<VoteDto>> getVoteTimeBetween(@RequestParam String start,
                                             @RequestParam String end) {
         String strToDatePattern = "yyyy-MM-dd HH:mm:ss";
         LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern(strToDatePattern));
         LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern(strToDatePattern));
+        if(startDate.isAfter(endDate)){
+            return ResponseEntity.badRequest().build();
+        }
         List<VoteEntity> voteEntities = voteService.findAllByVoteTimeBetween(startDate, endDate);
-        return voteEntityListConvertVoteDtoList(voteEntities);
+        return ResponseEntity.ok(voteEntityListConvertVoteDtoList(voteEntities));
     }
 
     @GetMapping("/vote")
@@ -47,7 +50,6 @@ class VoteController {
         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
         return voteEntityListConvertVoteDtoList(voteEntities);
     }
-
 
     @PostMapping("/rs/vote/{rsEventId}")
     @Transactional

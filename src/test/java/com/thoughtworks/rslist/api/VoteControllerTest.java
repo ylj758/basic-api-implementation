@@ -62,6 +62,17 @@ class VoteControllerTest {
     }
 
     @Test
+    void should_get_vote_by_vote_time_between_when_start_more_than_end() throws Exception {
+        setData();
+        String startStr = "2020-09-18 15:15:00";
+        String endStr = "2020-09-18 12:30:00";
+        mockMvc.perform(get("/vote/time")
+                .param("start", startStr)
+                .param("end", endStr))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void should_get_vote_by_vote_time_between() throws Exception {
         setData();
         String startStr = "2020-09-18 10:15:00";
@@ -140,7 +151,7 @@ class VoteControllerTest {
         assertEquals(10 - 2, userEntityOptional.get().getVote());
     }
 
-    public UserDto getAConcreteUser() {
+    public UserDto getAConcreteUser(){
         return UserDto.builder()
                 .name("XiaoMing")
                 .age(22)
@@ -239,5 +250,5 @@ class VoteControllerTest {
                 .rsEventId(2)
                 .build();
         voteService.save(voteEntity);
-    }
+}
 }
