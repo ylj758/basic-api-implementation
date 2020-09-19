@@ -21,18 +21,17 @@ public class VoteEntity {
     @Id
     @GeneratedValue
     private Integer id;
-//    private int rsEventId;
-//    private int userId;
+    private int rsEventId;
+    private int userId;
     private LocalDateTime voteTime;
     private int voteNum;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id")
+//    private UserEntity userEntity;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rs_event_id")
-    private RsEventEntity rsEventEntity;
-
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "rs_event_id")
+//    private RsEventEntity rsEventEntity;
 
 }

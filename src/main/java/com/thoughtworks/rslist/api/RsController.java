@@ -43,25 +43,25 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-//    @GetMapping("/rs/{index}")
-//    public ResponseEntity<String> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
-//        int size = rsEventService.findAll().size();
-//        if (index < 0) {
-//            throw new InvalidIndexException();
-//        }
-//
-//        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(index);
-//        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
-//        String eventName = rsEventEntity.getEventName();
-//        String keyword = rsEventEntity.getKeyword();
-//        int rsEventId = rsEventEntity.getId();
-//        List<VoteEntity> voteEntityList = voteService.findByRsEventId(index);
-//        int voteNumSum = voteEntityList.stream().mapToInt(VoteEntity::getVoteNum).sum();
-//
-//        String result = "eventName: \""+eventName+"\", keyword: \""+keyword+"\", id: "+ rsEventId + ", voteNum: "+voteNumSum;
-//
-//        return ResponseEntity.ok(result);
-//    }
+    @GetMapping("/rs/{index}")
+    public ResponseEntity<String> getRsEventByIndex(@PathVariable int index) throws InvalidIndexException {
+        int size = rsEventService.findAll().size();
+        if (index < 0) {
+            throw new InvalidIndexException();
+        }
+
+        Optional<RsEventEntity> rsEventEntityOptional = rsEventService.findById(index);
+        RsEventEntity rsEventEntity = rsEventEntityOptional.get();
+        String eventName = rsEventEntity.getEventName();
+        String keyword = rsEventEntity.getKeyword();
+        int rsEventId = rsEventEntity.getId();
+        List<VoteEntity> voteEntityList = voteService.findAllByRsEventId(index);
+        int voteNumSum = voteEntityList.stream().mapToInt(VoteEntity::getVoteNum).sum();
+
+        String result = "eventName: \""+eventName+"\", keyword: \""+keyword+"\", id: "+ rsEventId + ", voteNum: "+voteNumSum;
+
+        return ResponseEntity.ok(result);
+    }
 
   @JsonView(RsEvent.RsEventDetail.class)
   @GetMapping("/rs/list")

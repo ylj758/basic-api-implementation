@@ -76,30 +76,30 @@ class RsControllerTest {
     }
 
 
-//    @Test
-//    void should_get_one_rs_event() throws Exception {
-//        UserDto userDto = getAConcreteUser();
-//        userService.register(userDto);
-//        RsEvent rsEvent = RsEvent.builder()
-//                .eventName("猪肉涨价了")
-//                .keyword("经济")
-//                .userId(1)
-//                .build();
-//        rsEventService.save(rsEvent);
-//        VoteDto voteDto = VoteDto.builder()
-//                .voteNum(2)
-//                .voteTime(null)
-//                .userId(1)
-//                .rsEventId(2)
-//                .build();
-//        voteService.save(voteDto);
-//        voteService.save(voteDto);
-//
-//        MvcResult mvcResult = mockMvc.perform(get("/rs/2"))
-//                .andExpect(status().isOk()).andReturn();
-//
-//        assertEquals("eventName: \"猪肉涨价了\", keyword: \"经济\", id: 2, voteNum: 4", mvcResult.getResponse().getContentAsString());
-//    }
+    @Test
+    void should_get_one_rs_event() throws Exception {
+        UserDto userDto = getAConcreteUser();
+        userService.register(userDto);
+        RsEvent rsEvent = RsEvent.builder()
+                .eventName("猪肉涨价了")
+                .keyword("经济")
+                .userId(1)
+                .build();
+        rsEventService.save(rsEvent);
+        VoteDto voteDto = VoteDto.builder()
+                .voteNum(2)
+                .voteTime(null)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteDto);
+        voteService.save(voteDto);
+
+        MvcResult mvcResult = mockMvc.perform(get("/rs/2"))
+                .andExpect(status().isOk()).andReturn();
+
+        assertEquals("eventName: \"猪肉涨价了\", keyword: \"经济\", id: 2, voteNum: 4", mvcResult.getResponse().getContentAsString());
+    }
 
 
     @Test

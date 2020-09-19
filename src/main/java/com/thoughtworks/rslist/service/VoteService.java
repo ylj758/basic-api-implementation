@@ -19,29 +19,32 @@ public class VoteService {
     public void save(VoteEntity voteEntity){
         voteResponsitory.save(voteEntity);
     }
+    public void save(VoteDto voteDto){
+        VoteEntity voteEntity = VoteEntity.builder()
+                .voteNum(voteDto.getVoteNum())
+                .voteTime(voteDto.getVoteTime())
+                .voteTime(voteDto.getVoteTime())
+                .rsEventId(voteDto.getRsEventId())
+                .userId(voteDto.getUserId())
+                .build();
 
-//    public void save(VoteDto voteDto){
-//
-//        VoteEntity voteEntity = VoteEntity.builder()
-//                .voteNum(voteDto.getVoteNum())
-//                .voteTime(LocalDateTime.now())
-//                .rsEventEntity(voteDto.getRsEventId())
-//                .userEntity(voteDto.)
-//                .build();
-//
-//        voteResponsitory.save(voteEntity);
-//    }
-//
-//    public List<VoteEntity> findAll(){
-//        return voteResponsitory.findAll();
-//    }
-//
-//    public List<VoteEntity> findByRsEventId(int id){
-//       return voteResponsitory.findByRsEventId(id);
-//    }
-//
+        voteResponsitory.save(voteEntity);
+    }
+
+    public List<VoteEntity> findAll(){
+        return voteResponsitory.findAll();
+    }
+
+    public List<VoteEntity> findAllByRsEventId(int id){
+       return voteResponsitory.findAllByRsEventId(id);
+    }
+
     public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
         return voteResponsitory.findAllByUserEntityIdAndRsEventEntityId(userId, rsEventId, pageable);
+    }
+
+    public List<VoteEntity> findAllByVoteTimeBetween(LocalDateTime start, LocalDateTime end){
+        return voteResponsitory.findAllByVoteTimeBetween(start, end);
     }
 
     public void deleteAll(){
