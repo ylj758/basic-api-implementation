@@ -13,8 +13,12 @@ import java.util.List;
 
 @Service
 public class VoteService {
-    @Autowired
+
     VoteResponsitory voteResponsitory;
+    @Autowired
+    public VoteService(VoteResponsitory voteResponsitory){
+        this.voteResponsitory = voteResponsitory;
+    }
 
     public void save(VoteEntity voteEntity){
         voteResponsitory.save(voteEntity);

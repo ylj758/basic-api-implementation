@@ -22,10 +22,13 @@ import java.util.stream.Collectors;
 
 @RestController
 class VoteController {
-    @Autowired
     VoteService voteService;
-    @Autowired
     UserService userService;
+    @Autowired
+    public VoteController( VoteService voteService, UserService userService){
+        this.voteService = voteService;
+        this.userService = userService;
+    }
 
 
     @GetMapping("/vote/time")
