@@ -22,8 +22,11 @@ import java.util.Optional;
 
 @RestController
 public class UserController {
-    @Autowired
     UserService userService;
+    @Autowired
+    public UserController(UserService userService){
+        this.userService = userService;
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> register(@PathVariable int id){
