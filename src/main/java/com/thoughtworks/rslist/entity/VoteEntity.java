@@ -26,11 +26,11 @@ public class VoteEntity {
     private LocalDateTime voteTime;
     private int voteNum;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rs_event_id")
     private RsEventEntity rsEventEntity;
 

@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.entity.VoteEntity;
+import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -136,38 +138,87 @@ class VoteControllerTest {
                 .vote(10)
                 .build();
     }
-    public UserEntity getUserEntity(){
-        return UserEntity.builder()
-                .name("XiaoMing")
-                .age(22)
-                .gender("male")
-                .email("768@qq.com")
-                .phone("12345678900")
-                .vote(10)
-                .build();
-    }
-
     private void setData(){
-        userService.register(getAConcreteUser());
-        RsEvent rsEvent = RsEvent.builder()
-                .eventName("猪肉涨价了")
-                .keyword("经济")
-                .userId(1)
+        UserDto userDto = getAConcreteUser();
+        UserEntity userEntity = UserEntity.builder()
+                .name(userDto.getName())
+                .age(userDto.getAge())
+                .gender(userDto.getGender())
+                .email(userDto.getEmail())
+                .phone(userDto.getPhone())
+                .vote(userDto.getVote())
                 .build();
-        rsEventService.save(rsEvent);
+        userService.save(userEntity);
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName("猪肉涨价了")
                 .keyword("经济")
+                .userEntity(userEntity)
                 .build();
-        VoteEntity voteEntity = VoteEntity.builder()
-                .voteNum(1)
-                .voteTime(null)
-                .userEntity(getUserEntity())
+        rsEventService.save(rsEventEntity);
+            VoteEntity voteEntity = VoteEntity.builder()
+                    .voteNum(1)
+                    .voteTime(LocalDateTime.now())
+                    .userEntity(userEntity)
+                    .rsEventEntity(rsEventEntity)
+                    .build();
+            voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(2)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
                 .rsEventEntity(rsEventEntity)
                 .build();
-        for(int i=0; i<8; i++){
-            voteService.save(voteEntity);
-        }
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(3)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(4)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(5)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(6)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(7)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
+        voteEntity = VoteEntity.builder()
+                .voteNum(8)
+                .voteTime(LocalDateTime.now())
+                .userEntity(userEntity)
+                .rsEventEntity(rsEventEntity)
+                .build();
+        voteService.save(voteEntity);
+
 
 
     }

@@ -21,11 +21,12 @@ public class VoteService {
     }
 
 //    public void save(VoteDto voteDto){
+//
 //        VoteEntity voteEntity = VoteEntity.builder()
 //                .voteNum(voteDto.getVoteNum())
 //                .voteTime(LocalDateTime.now())
-//                .rsEventId(voteDto.getRsEventId())
-//                .userId(voteDto.getUserId())
+//                .rsEventEntity(voteDto.getRsEventId())
+//                .userEntity(voteDto.)
 //                .build();
 //
 //        voteResponsitory.save(voteEntity);
@@ -40,7 +41,7 @@ public class VoteService {
 //    }
 //
     public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
-        return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+        return voteResponsitory.findAllByUserEntityIdAndRsEventEntityId(userId, rsEventId, pageable);
     }
 
     public void deleteAll(){

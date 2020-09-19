@@ -38,7 +38,9 @@ public class RsEventService {
                 .build();
         rsEventRepository.save(rsEventEntity);
     }
-
+    public void save(RsEventEntity rsEventEntity){
+        rsEventRepository.save(rsEventEntity);
+    }
     public void update(RsEventEntity rsEventEntity){
         Optional<RsEventEntity> oldRsEventEntityOptional = rsEventRepository.findById(rsEventEntity.getId());
         RsEventEntity oldRsEventEntity = oldRsEventEntityOptional.get();

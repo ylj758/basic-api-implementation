@@ -40,6 +40,9 @@ public class UserService{
                 .build();
         userRepository.save(userEntity);
     }
+    public void save(UserEntity userEntity){
+        userRepository.save(userEntity);
+    }
 
     public boolean existsById(int id){
         return userRepository.existsById(id);
