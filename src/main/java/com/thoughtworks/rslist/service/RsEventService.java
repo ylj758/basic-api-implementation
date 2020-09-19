@@ -12,29 +12,28 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class RsEventService {
-    @Autowired
     RsEventRepository rsEventRepository;
-    @Autowired
     UserRepository userRepository;
-//    @Autowired
-//    public RsEventService(RsEventRepository rsEventRepository,  UserRepository userRepository){
-//        this.rsEventRepository = rsEventRepository;
-//        this.userRepository = userRepository;
-//    }
 
-    public List<RsEventEntity> findAll(){
+    @Autowired
+    public RsEventService(RsEventRepository rsEventRepository, UserRepository userRepository) {
+        this.rsEventRepository = rsEventRepository;
+        this.userRepository = userRepository;
+    }
+
+    public List<RsEventEntity> findAll() {
         return rsEventRepository.findAll();
     }
 
-    public Optional<RsEventEntity> findById(int id){
+    public Optional<RsEventEntity> findById(int id) {
         return rsEventRepository.findById(id);
     }
 
-    public void save(RsEvent rsEvent){
+    public void save(RsEvent rsEvent) {
 
-        Optional<UserEntity> userEntityOptional =  userRepository.findById(rsEvent.getUserId());
+        Optional<UserEntity> userEntityOptional = userRepository.findById(rsEvent.getUserId());
 
         RsEventEntity rsEventEntity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
@@ -43,10 +42,12 @@ public class RsEventService {
                 .build();
         rsEventRepository.save(rsEventEntity);
     }
-    public void save(RsEventEntity rsEventEntity){
+
+    public void save(RsEventEntity rsEventEntity) {
         rsEventRepository.save(rsEventEntity);
     }
-    public void update(RsEventEntity rsEventEntity){
+
+    public void update(RsEventEntity rsEventEntity) {
         Optional<RsEventEntity> oldRsEventEntityOptional = rsEventRepository.findById(rsEventEntity.getId());
         RsEventEntity oldRsEventEntity = oldRsEventEntityOptional.get();
         oldRsEventEntity.setEventName(rsEventEntity.getEventName());
@@ -54,12 +55,12 @@ public class RsEventService {
         rsEventRepository.save(rsEventEntity);
     }
 
-    public void deleteById(int id){
+    public void deleteById(int id) {
         rsEventRepository.deleteById(id);
     }
 
 
-    public void deleteAll(){
+    public void deleteAll() {
         rsEventRepository.deleteAll();
     }
 }

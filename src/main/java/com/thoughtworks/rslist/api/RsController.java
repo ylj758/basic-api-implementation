@@ -26,21 +26,15 @@ import java.util.Optional;
 
 @RestController
 public class RsController {
-    @Autowired
-    RsEventService rsEventService;
-    @Autowired
     UserService userService;
-    @Autowired
+    RsEventService rsEventService;
     VoteService voteService;
-//    UserService userService;
-//    RsEventService rsEventService;
-//    VoteService voteService;
-//    @Autowired
-//    public RsController(UserService userService, RsEventService rsEventService, VoteService voteService){
-//        this.userService = userService;
-//        this.rsEventService = rsEventService;
-//        this.voteService = voteService;
-//    }
+    @Autowired
+    public RsController(UserService userService, RsEventService rsEventService, VoteService voteService){
+        this.userService = userService;
+        this.rsEventService = rsEventService;
+        this.voteService = voteService;
+    }
 
     @PostMapping("/rs/event")
     public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent) {
