@@ -55,7 +55,7 @@ public class RsController {
         String eventName = rsEventEntity.getEventName();
         String keyword = rsEventEntity.getKeyword();
         int rsEventId = rsEventEntity.getId();
-        List<VoteEntity> voteEntityList = voteService.findByRsEventId(index);
+        List<VoteEntity> voteEntityList = voteService.findAllByRsEventId(index);
         int voteNumSum = voteEntityList.stream().mapToInt(VoteEntity::getVoteNum).sum();
 
         String result = "eventName: \""+eventName+"\", keyword: \""+keyword+"\", id: "+ rsEventId + ", voteNum: "+voteNumSum;

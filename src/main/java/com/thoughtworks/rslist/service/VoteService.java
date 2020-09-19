@@ -23,7 +23,8 @@ public class VoteService {
     public void save(VoteDto voteDto){
         VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(voteDto.getVoteNum())
-                .voteTime(LocalDateTime.now())
+                .voteTime(voteDto.getVoteTime())
+                .voteTime(voteDto.getVoteTime())
                 .rsEventId(voteDto.getRsEventId())
                 .userId(voteDto.getUserId())
                 .build();
@@ -35,12 +36,16 @@ public class VoteService {
         return voteResponsitory.findAll();
     }
 
-    public List<VoteEntity> findByRsEventId(int id){
-       return voteResponsitory.findByRsEventId(id);
+    public List<VoteEntity> findAllByRsEventId(int id){
+       return voteResponsitory.findAllByRsEventId(id);
     }
 
     public List<VoteEntity> findAllByUserIdAndRsEventId(int userId, int rsEventId, Pageable pageable){
         return voteResponsitory.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
+    }
+
+    public List<VoteEntity> findAllByVoteTimeBetween(LocalDateTime start, LocalDateTime end){
+        return voteResponsitory.findAllByVoteTimeBetween(start, end);
     }
 
     public void deleteAll(){

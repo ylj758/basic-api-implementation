@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +28,16 @@ class VoteController {
     UserService userService;
 
 
+    @GetMapping("/vote/time")
+    public List<VoteDto> getVoteTimeBetween(@RequestParam String start,
+                                            @RequestParam String end) {
+        String strToDatePattern = "yyyy-MM-dd HH:mm:ss";
+        LocalDateTime startDate = LocalDateTime.parse(start, DateTimeFormatter.ofPattern(strToDatePattern));
+        LocalDateTime endDate = LocalDateTime.parse(end, DateTimeFormatter.ofPattern(strToDatePattern));
+        List<VoteEntity> voteEntities = voteService.findAllByVoteTimeBetween(startDate, endDate);
+        return voteEntityListConvertVoteDtoList(voteEntities);
+    }
+
     @GetMapping("/vote")
     public List<VoteDto> getVoteByUserIdAndrsEventId(@RequestParam int userId,
                                                      @RequestParam int rsEventId,
@@ -33,15 +45,7 @@ class VoteController {
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
         List<VoteEntity> voteEntities = voteService.findAllByUserIdAndRsEventId(userId, rsEventId, pageable);
-        List<VoteDto> voteDtoList = voteEntities.stream()
-                .map(voteEntity -> VoteDto.builder()
-                        .userId(voteEntity.getUserId())
-                        .rsEventId(voteEntity.getRsEventId())
-                        .voteNum(voteEntity.getVoteNum())
-                        .voteTime(voteEntity.getVoteTime())
-                        .build())
-                .collect(Collectors.toList());
-        return voteDtoList;
+        return voteEntityListConvertVoteDtoList(voteEntities);
     }
 
 
@@ -60,12 +64,14 @@ class VoteController {
     }
 
 
-    public VoteDto voteEntityConvertVoteDto(VoteEntity voteEntity){
-        return VoteDto.builder()
-                .userId(voteEntity.getUserId())
-                .rsEventId(voteEntity.getRsEventId())
-                .voteNum(voteEntity.getVoteNum())
-                .voteTime(voteEntity.getVoteTime())
-                .build();
+    public List<VoteDto> voteEntityListConvertVoteDtoList(List<VoteEntity> voteEntities){
+        return voteEntities.stream()
+                .map(voteEntity -> VoteDto.builder()
+                        .userId(voteEntity.getUserId())
+                        .rsEventId(voteEntity.getRsEventId())
+                        .voteNum(voteEntity.getVoteNum())
+                        .voteTime(voteEntity.getVoteTime())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

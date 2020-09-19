@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -53,10 +55,22 @@ class VoteControllerTest {
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         userService.deleteAll();
         rsEventService.deleteAll();
         voteService.deleteAll();
+    }
+
+    @Test
+    void should_get_vote_by_vote_time_between() throws Exception {
+        setData();
+        String startStr = "2020-09-18 10:15:00";
+        String endStr = "2020-09-18 12:30:00";
+        mockMvc.perform(get("/vote/time")
+                .param("start", startStr)
+                .param("end", endStr))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 
 
@@ -123,10 +137,10 @@ class VoteControllerTest {
 
         assertEquals(1, voteService.findAll().size());
         Optional<UserEntity> userEntityOptional = userService.findById(1);
-        assertEquals(10-2, userEntityOptional.get().getVote());
+        assertEquals(10 - 2, userEntityOptional.get().getVote());
     }
 
-    public UserDto getAConcreteUser(){
+    public UserDto getAConcreteUser() {
         return UserDto.builder()
                 .name("XiaoMing")
                 .age(22)
@@ -136,18 +150,8 @@ class VoteControllerTest {
                 .vote(10)
                 .build();
     }
-    public UserEntity getUserEntity(){
-        return UserEntity.builder()
-                .name("XiaoMing")
-                .age(22)
-                .gender("male")
-                .email("768@qq.com")
-                .phone("12345678900")
-                .vote(10)
-                .build();
-    }
 
-    private void setData(){
+    private void setData() {
         userService.register(getAConcreteUser());
         RsEvent rsEvent = RsEvent.builder()
                 .eventName("猪肉涨价了")
@@ -155,22 +159,85 @@ class VoteControllerTest {
                 .userId(1)
                 .build();
         rsEventService.save(rsEvent);
-//        VoteEntity voteEntity = VoteEntity.builder()
-//                .voteNum(1)
-//                .voteTime(null)
-//                .userId(1)
-//                .rsEventId(2)
-//                .build();
-        for(int i=0; i<8; i++){
-            VoteEntity voteEntity = VoteEntity.builder()
-                    .voteNum(1)
-                    .voteTime(null)
-                    .userId(1)
-                    .rsEventId(2)
-                    .build();
-            voteService.save(voteEntity);
-        }
 
+        String str1 = "2020年09月18日 09:10:00";
+        LocalDateTime date1 = LocalDateTime.parse(str1, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        VoteEntity voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date1)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
 
+        String str2 = "2020年09月18日 10:10:00";
+        LocalDateTime date2 = LocalDateTime.parse(str2, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date2)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str3 = "2020年09月18日 10:20:00";
+        LocalDateTime date3 = LocalDateTime.parse(str3, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date3)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str4 = "2020年09月18日 11:20:00";
+        LocalDateTime date4 = LocalDateTime.parse(str4, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date4)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str5 = "2020年09月18日 12:20:00";
+        LocalDateTime date5 = LocalDateTime.parse(str5, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date5)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str6 = "2020年09月18日 13:20:00";
+        LocalDateTime date6 = LocalDateTime.parse(str6, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date6)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str7 = "2020年09月18日 14:20:00";
+        LocalDateTime date7 = LocalDateTime.parse(str7, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date7)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
+
+        String str8 = "2020年09月18日 15:20:00";
+        LocalDateTime date8 = LocalDateTime.parse(str8, DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss"));
+        voteEntity = VoteEntity.builder()
+                .voteNum(1)
+                .voteTime(date8)
+                .userId(1)
+                .rsEventId(2)
+                .build();
+        voteService.save(voteEntity);
     }
 }
