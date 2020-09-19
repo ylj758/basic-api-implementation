@@ -32,6 +32,15 @@ public class RsController {
     UserService userService;
     @Autowired
     VoteService voteService;
+//    UserService userService;
+//    RsEventService rsEventService;
+//    VoteService voteService;
+//    @Autowired
+//    public RsController(UserService userService, RsEventService rsEventService, VoteService voteService){
+//        this.userService = userService;
+//        this.rsEventService = rsEventService;
+//        this.voteService = voteService;
+//    }
 
     @PostMapping("/rs/event")
     public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent) {

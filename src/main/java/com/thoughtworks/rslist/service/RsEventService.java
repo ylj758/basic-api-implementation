@@ -12,12 +12,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+
 public class RsEventService {
     @Autowired
     RsEventRepository rsEventRepository;
     @Autowired
     UserRepository userRepository;
+//    @Autowired
+//    public RsEventService(RsEventRepository rsEventRepository,  UserRepository userRepository){
+//        this.rsEventRepository = rsEventRepository;
+//        this.userRepository = userRepository;
+//    }
 
     public List<RsEventEntity> findAll(){
         return rsEventRepository.findAll();

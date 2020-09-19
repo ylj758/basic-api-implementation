@@ -36,6 +36,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RsControllerTest {
+//    MockMvc mockMvc;
+//    UserService userService;
+//    RsEventService rsEventService;
+//    VoteService voteService;
+//    @Autowired
+//    public RsControllerTest(MockMvc mockMvc, UserService userService, RsEventService rsEventService, VoteService voteService){
+//        this.mockMvc = mockMvc;
+//        this.userService = userService;
+//        this.rsEventService = rsEventService;
+//        this.voteService = voteService;
+//    }
     @Autowired
     private MockMvc mockMvc;
     @Autowired
