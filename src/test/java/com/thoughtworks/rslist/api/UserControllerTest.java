@@ -51,7 +51,7 @@ class UserControllerTest {
         rsEventService.save(rsEvent);
         assertEquals(1, rsEventService.findAll().size());
 
-        mockMvc.perform(delete("/user/delete-user/1"))
+        mockMvc.perform(delete("/user/delete/1"))
                 .andExpect(status().isNoContent());
 
         assertEquals(0, userService.findAll().size());
@@ -65,7 +65,7 @@ class UserControllerTest {
         List<UserEntity> userEntityList = userService.findAll();
         assertEquals(1, userEntityList.size());
 
-        mockMvc.perform(delete("/user/delete-user/1"))
+        mockMvc.perform(delete("/user/delete/1"))
                 .andExpect(status().isNoContent());
 
         userEntityList = userService.findAll();
@@ -91,7 +91,7 @@ class UserControllerTest {
         Optional<UserEntity> userEntity = userService.findById(1);
         assertEquals(userEntity.isPresent(),false);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -106,7 +106,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -118,7 +118,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -130,7 +130,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -142,7 +142,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -154,7 +154,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -166,7 +166,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -178,7 +178,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -190,7 +190,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -202,7 +202,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -214,7 +214,7 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 
-        mockMvc.perform(post("/user/register-user")
+        mockMvc.perform(post("/user/register")
                 .content(userDtoJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -225,7 +225,7 @@ class UserControllerTest {
         UserDto userDto = getAConcreteUser();
         userService.register(userDto);
 
-        mockMvc.perform(get("/user/users"))
+        mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("XiaoMing")));

@@ -28,7 +28,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @DeleteMapping("/user/delete-user/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public ResponseEntity<Object> register(@PathVariable int id){
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -52,14 +52,14 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PostMapping("/user/register-user")
+    @PostMapping("/user/register")
     public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto){
         userService.register(userDto);
         return ResponseEntity.created(null).build();
     }
 
 
-    @GetMapping("/user/users")
+    @GetMapping("/users")
     public ResponseEntity<List<UserEntity>> getAllUsers() throws JsonProcessingException {
         return ResponseEntity.ok(userService.findAll());
     }

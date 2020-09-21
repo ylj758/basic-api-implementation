@@ -56,7 +56,7 @@ class RsControllerTest {
     @Test
     void should_add_one_rs_event_when_user_not_exist() throws Exception {
         String json = "{\"eventName\":\"猪肉涨价了\",\"keyword\":\"经济\",\"userId\":\"1\"}";
-        mockMvc.perform(post("/rs/event")
+        mockMvc.perform(post("/rs")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
@@ -67,7 +67,7 @@ class RsControllerTest {
         userService.register(userDto);
 
         String json = "{\"eventName\":\"猪肉涨价了\",\"keyword\":\"经济\",\"userId\":\"1\"}";
-        mockMvc.perform(post("/rs/event")
+        mockMvc.perform(post("/rs")
                 .content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
@@ -176,7 +176,7 @@ class RsControllerTest {
         rsEventService.save(rsEvent);
         assertEquals(1, rsEventService.findAll().size());
 
-        mockMvc.perform(put("/patch/rs/2?userId=3&eventName=猪肉终于跌价了&keyword=民生"))
+        mockMvc.perform(patch("/patch/rs/2?userId=3&eventName=猪肉终于跌价了&keyword=民生"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -260,7 +260,7 @@ class RsControllerTest {
         assertEquals(1, rsEventService.findAll().size());
         assertEquals(1, userService.findAll().size());
 
-        mockMvc.perform(delete("/rs/delete-user?id=2"))
+        mockMvc.perform(delete("rs/delete?id=2"))
                 .andExpect(status().isCreated());
 
         assertEquals(0, rsEventService.findAll().size());

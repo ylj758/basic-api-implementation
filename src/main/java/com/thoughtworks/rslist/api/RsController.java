@@ -36,7 +36,7 @@ public class RsController {
         this.voteService = voteService;
     }
 
-    @PostMapping("/rs/event")
+    @PostMapping("/rs")
     public ResponseEntity<Object> addRsEvent(@Valid @RequestBody RsEvent rsEvent) {
         List<UserEntity> userEntityList = userService.findAll();
         if (!userService.existsById(rsEvent.getUserId())) {
@@ -78,7 +78,7 @@ public class RsController {
   }
 
 
-    @PutMapping("/patch/rs/{rsEventId}")
+    @PatchMapping("/patch/rs/{rsEventId}")
     public ResponseEntity<Object> updateRsEvent(@PathVariable Integer rsEventId,
                                                 @RequestParam Integer userId,
                                                 @RequestParam(required = false) String eventName,
@@ -107,7 +107,7 @@ public class RsController {
     }
 
 
-    @RequestMapping(value = "/rs/delete-user",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/rs/delete",method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteRsEvent(@RequestParam int id){
         rsEventService.deleteById(id);
         return ResponseEntity.created(null).build();
